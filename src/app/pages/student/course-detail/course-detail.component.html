@@ -1,0 +1,79 @@
+<div class="detail-page" *ngIf="!loading && course">
+  <div class="detail-hero">
+    <div class="container">
+      <div class="breadcrumb"><a routerLink="/courses">← All Courses</a> / {{ course.title }}</div>
+      <div class="hero-content">
+        <div class="hero-left">
+          <span class="badge badge-{{course.category}}">{{ course.category }}</span>
+          <h1>{{ course.title }}</h1>
+          <p class="hero-desc">{{ course.description }}</p>
+          <div class="hero-stats">
+            <span>⭐ {{ course.rating }}</span>
+            <span>👥 {{ course.enrolled | number }} enrolled</span>
+            <span>⏱ {{ course.duration }}</span>
+            <span *ngIf="course.certification">🏆 Certificate included</span>
+          </div>
+        </div>
+        <div class="enroll-card card">
+          <div class="price">₹{{ course.price | number }}</div>
+          <div class="alert alert-success" *ngIf="message" style="margin-bottom:12px">{{ message }}</div>
+          <button class="btn btn-primary btn-lg full-width" (click)="addToCart()" [disabled]="added">
+            {{ added ? '✓ Added to Cart' : '🛒 Add to Cart' }}
+          </button>
+          <a routerLink="/cart" class="btn btn-outline btn-lg full-width" style="margin-top:10px;text-align:center;justify-content:center" *ngIf="added">
+            Proceed to Cart →
+          </a>
+          <ul class="includes">
+            <li>✅ Full lifetime access</li>
+            <li>✅ {{ course.duration }} of content</li>
+            <li *ngIf="course.certification">✅ Certificate of completion</li>
+            <li>✅ Access on mobile & desktop</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container detail-body">
+    <div class="section-block">
+      <h2 class="section-title">Why <span>{{ course.title }}?</span></h2>
+      <p class="why-text">{{ course.why }}</p>
+    </div>
+
+    <div class="section-block">
+      <h2 class="section-title"><span>Course Curriculum</span></h2>
+      <div class="curriculum-list">
+        <div class="curriculum-item" *ngFor="let item of course.curriculum; let i = index">
+          <span class="num">{{ i + 1 }}</span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h2 class="section-title">Meet Your <span>Mentor</span></h2>
+      <div class="mentor-card card">
+        <img [src]="course.mentor.avatar" [alt]="course.mentor.name" class="mentor-avatar">
+        <div>
+          <h3>{{ course.mentor.name }}</h3>
+          <p>{{ course.mentor.bio }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block" *ngIf="course.certification">
+      <h2 class="section-title"><span>Certification</span></h2>
+      <div class="cert-card card">
+        <span class="cert-icon">🏆</span>
+        <div>
+          <h3>Industry-Recognized Certificate</h3>
+          <p>Earn a certificate upon completing all modules. Shareable on LinkedIn and your resume.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="empty-state" *ngIf="loading">
+  <p>Loading course details...</p>
+</div>

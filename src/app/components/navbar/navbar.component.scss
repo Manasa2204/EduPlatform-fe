@@ -1,0 +1,64 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: rgba(255,255,255,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    .logo-icon { font-size: 24px; }
+    .logo-text { font-size: 20px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    a {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+      &:hover, &.active { color: var(--primary); }
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      .avatar {
+        width: 32px; height: 32px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700;
+        color: #FFFFFF;
+      }
+      .role-tag {
+        padding: 2px 8px;
+        background: rgba(0,112,243,0.15);
+        color: var(--primary);
+        border-radius: 10px;
+        font-size: 10px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}

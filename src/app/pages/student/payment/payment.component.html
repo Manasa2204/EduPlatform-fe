@@ -1,0 +1,76 @@
+<div class="payment-page">
+  <div class="page-header" *ngIf="step !== 'success'">
+    <h1>Secure Payment</h1>
+    <p>Complete your enrollment</p>
+  </div>
+
+  <div class="container">
+    <!-- Payment Form -->
+    <div class="payment-layout" *ngIf="step === 'details'">
+      <div class="payment-form card">
+        <h2>💳 Card Details</h2>
+        <div class="secure-badge">🔒 SSL Secured Payment</div>
+        <form (ngSubmit)="pay()">
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" [(ngModel)]="card.number" name="cardNum" placeholder="1234 5678 9012 3456" maxlength="19" required>
+          </div>
+          <div class="form-group">
+            <label>Cardholder Name</label>
+            <input type="text" [(ngModel)]="card.name" name="cardName" placeholder="John Doe" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expiry Date</label>
+              <input type="text" [(ngModel)]="card.expiry" name="expiry" placeholder="MM/YY" maxlength="5" required>
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="text" [(ngModel)]="card.cvv" name="cvv" placeholder="•••" maxlength="3" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">
+            Pay ₹{{ total | number }} Now →
+          </button>
+        </form>
+      </div>
+
+      <div class="order-review card">
+        <h2>Order Review</h2>
+        <div class="order-item" *ngFor="let item of cartItems">
+          <span>{{ item.title }}</span>
+          <span>₹{{ item.price | number }}</span>
+        </div>
+        <div class="order-total">
+          <span>Total</span>
+          <span>₹{{ total | number }}</span>
+        </div>
+        <div class="payment-logos">
+          <span>Visa</span><span>Mastercard</span><span>UPI</span><span>NetBanking</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Processing -->
+    <div class="processing-state" *ngIf="step === 'processing'">
+      <div class="spinner"></div>
+      <h2>Processing Payment...</h2>
+      <p>Please wait, do not close this window</p>
+    </div>
+
+    <!-- Success -->
+    <div class="success-state" *ngIf="step === 'success'">
+      <div class="success-icon">🎉</div>
+      <h1>Payment Successful!</h1>
+      <p>You're now enrolled in {{ cartItems.length }} course(s)</p>
+      <p class="order-id">Order ID: <strong>{{ order?.id }}</strong></p>
+      <div class="enrolled-courses">
+        <div class="enrolled-item" *ngFor="let item of order?.courses">
+          <span class="tag-chip">{{ item.tag }}</span>
+          <span>{{ item.title }}</span>
+        </div>
+      </div>
+      <a routerLink="/courses" class="btn btn-primary btn-lg" style="margin-top:24px">Start Learning →</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+.about-hero {
+  padding: 80px 20px 60px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, rgba(0,112,243,0.06) 0%, transparent 70%);
+  h1 { font-size: 48px; font-weight: 800; line-height: 1.2; margin-bottom: 16px;
+    span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } }
+  p { color: var(--text-secondary); font-size: 18px; max-width: 600px; margin: 0 auto 40px; line-height: 1.6; }
+  .about-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+}
+
+.values-section { padding: 60px 20px; }
+.value-card { text-align: center;
+  .v-icon { font-size: 36px; display: block; margin-bottom: 12px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  p { color: var(--text-secondary); font-size: 14px; line-height: 1.5; } }

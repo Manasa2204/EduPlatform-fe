@@ -1,0 +1,19 @@
+.apply-page { padding-bottom: 60px; }
+
+.apply-form {
+  max-width: 780px;
+  margin: 0 auto;
+  h2 { font-size: 22px; font-weight: 700; margin-bottom: 28px; }
+}
+
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; @media (max-width: 600px) { grid-template-columns: 1fr; } }
+
+.success-card {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  .success-icon { font-size: 64px; margin-bottom: 20px; }
+  h2 { font-size: 28px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p { color: var(--text-muted); margin-top: 12px; line-height: 1.6; }
+}

@@ -1,0 +1,95 @@
+<div class="faculty-page">
+  <div class="page-header">
+    <h1>Faculty Dashboard</h1>
+    <p>Manage your students and sessions</p>
+  </div>
+
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-box card"><div class="value">{{ students.length }}</div><div class="label">Total Students</div></div>
+      <div class="stat-box card"><div class="value">{{ schedule.length }}</div><div class="label">Scheduled Sessions</div></div>
+      <div class="stat-box card"><div class="value">{{ schedule | zoomCount }}</div><div class="label">Zoom Links Created</div></div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab" [class.active]="activeTab==='students'" (click)="activeTab='students'">👥 Students</button>
+      <button class="tab" [class.active]="activeTab==='schedule'" (click)="activeTab='schedule'">📅 Schedule</button>
+    </div>
+
+    <!-- Students Tab -->
+    <div *ngIf="activeTab === 'students'">
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Student</th><th>Email</th><th>Course</th><th>Progress</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of students">
+              <td>
+                <div class="student-name">
+                  <img [src]="s.avatar" class="student-avatar">
+                  {{ s.name }}
+                </div>
+              </td>
+              <td>{{ s.email }}</td>
+              <td><span class="tag-chip">{{ s.course }}</span></td>
+              <td>
+                <div class="progress-wrap">
+                  <div class="progress-bar"><div class="fill" [style.width.%]="s.progress"></div></div>
+                  <span class="pct">{{ s.progress }}%</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Schedule Tab -->
+    <div *ngIf="activeTab === 'schedule'">
+      <div class="schedule-grid">
+        <div class="schedule-card card" *ngFor="let sch of schedule">
+          <div class="sch-header">
+            <h3>{{ sch.title }}</h3>
+            <span class="sch-date">📅 {{ sch.date }} at {{ sch.time }}</span>
+          </div>
+          <div class="sch-students">
+            <span class="text-muted">Students: </span>
+            <span class="tag-chip" *ngFor="let s of sch.students">{{ s }}</span>
+          </div>
+          <div class="zoom-section">
+            <div *ngIf="sch.zoomLink; else noZoom">
+              <a [href]="sch.zoomLink" target="_blank" class="zoom-link">🎥 {{ sch.zoomLink }}</a>
+            </div>
+            <ng-template #noZoom>
+              <button class="btn btn-primary" (click)="openZoomModal(sch)">📹 Create Zoom Meeting</button>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-success" *ngIf="zoomResult" style="margin-top:16px">
+        ✅ Zoom meeting created: <a [href]="zoomResult" target="_blank" class="zoom-link">{{ zoomResult }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Zoom Modal -->
+<div class="modal-overlay" *ngIf="showZoomModal">
+  <div class="modal">
+    <h2>📹 Create Zoom Meeting</h2>
+    <div class="form-group">
+      <label>Topic</label>
+      <input type="text" [(ngModel)]="zoom.topic" placeholder="Meeting topic">
+    </div>
+    <div class="form-group">
+      <label>Start Time</label>
+      <input type="datetime-local" [(ngModel)]="zoom.startTime">
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button class="btn btn-primary" (click)="createZoom()">Create & Share</button>
+      <button class="btn btn-outline" (click)="showZoomModal=false">Cancel</button>
+    </div>
+  </div>
+</div>

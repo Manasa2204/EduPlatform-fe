@@ -1,0 +1,19 @@
+@import '../login/login.component.scss';
+
+.role-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  .role-card {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    input { display: none; }
+    &.selected { border-color: var(--primary); background: rgba(108,99,255,0.1); color: var(--primary); font-weight: 600; }
+    &:hover { border-color: rgba(108,99,255,0.4); }
+  }
+}

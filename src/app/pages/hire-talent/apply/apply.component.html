@@ -1,0 +1,76 @@
+<div class="apply-page">
+  <div class="page-header">
+    <h1>Start Teaching Today</h1>
+    <p>Tell us about yourself and your expertise</p>
+  </div>
+
+  <div class="container">
+    <div class="success-card" *ngIf="submitted">
+      <div class="success-icon">🎉</div>
+      <h2>Application Submitted!</h2>
+      <p>Our admin team will review your application within 48 hours. Check your email for updates.</p>
+      <a routerLink="/hire-talent" class="btn btn-outline" style="margin-top:16px">← Back to Teach With Us</a>
+    </div>
+
+    <div class="apply-form card" *ngIf="!submitted">
+      <h2>📋 Application Form</h2>
+      <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+      <form (ngSubmit)="submit()">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" [(ngModel)]="form.name" name="name" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" [(ngModel)]="form.email" name="email" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" [(ngModel)]="form.phone" name="phone" placeholder="+91 9876543210" required>
+          </div>
+          <div class="form-group">
+            <label>Years of Experience *</label>
+            <select [(ngModel)]="form.experience" name="experience" required>
+              <option value="">Select</option>
+              <option value="1-3">1–3 years</option>
+              <option value="4-7">4–7 years</option>
+              <option value="8-12">8–12 years</option>
+              <option value="12+">12+ years</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Area of Expertise *</label>
+          <input type="text" [(ngModel)]="form.expertise" name="expertise" placeholder="e.g. Java, DevOps, Data Science, React" required>
+        </div>
+        <div class="form-group">
+          <label>LinkedIn Profile</label>
+          <input type="url" [(ngModel)]="form.linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+        </div>
+        <div class="form-group">
+          <label>Your Bio *</label>
+          <textarea [(ngModel)]="form.bio" name="bio" placeholder="Tell us about your background, achievements, and teaching experience..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Course Idea *</label>
+          <textarea [(ngModel)]="form.courseIdea" name="courseIdea" placeholder="What course would you like to create? Describe the topic and target audience..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Availability</label>
+          <select [(ngModel)]="form.availability" name="availability">
+            <option value="">Select</option>
+            <option value="full-time">Full Time</option>
+            <option value="part-time">Part Time (Weekends)</option>
+            <option value="evenings">Evenings Only</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading">
+          {{ loading ? 'Submitting...' : 'Submit Application →' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

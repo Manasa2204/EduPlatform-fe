@@ -1,0 +1,131 @@
+<div class="profile-page">
+  <div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your account and track your learning journey</p>
+  </div>
+
+  <div class="container">
+    <div class="profile-layout">
+      <!-- User Info Card -->
+      <div class="user-card card">
+        <div class="user-avatar">
+          {{ user?.name?.[0] }}
+        </div>
+        <div class="user-info">
+          <h2>{{ user?.name }}</h2>
+          <p class="user-email">{{ user?.email }}</p>
+          <div class="user-meta">
+            <span class="meta-item">👤 {{ user?.role | titlecase }}</span>
+            <span class="meta-item">📅 Joined {{ getJoinDate() }}</span>
+          </div>
+        </div>
+        <button class="btn btn-outline edit-btn">Edit Profile</button>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card card">
+          <span class="stat-icon">📚</span>
+          <div class="stat-content">
+            <div class="stat-number">{{ enrolledCourses.length }}</div>
+            <div class="stat-label">Courses Enrolled</div>
+          </div>
+        </div>
+        
+        <div class="stat-card card">
+          <span class="stat-icon">💰</span>
+          <div class="stat-content">
+            <div class="stat-number">₹{{ totalSpent | number }}</div>
+            <div class="stat-label">Total Invested</div>
+          </div>
+        </div>
+        
+        <div class="stat-card card">
+          <span class="stat-icon">⚡</span>
+          <div class="stat-content">
+            <div class="stat-number">{{ getCompletionPercentage() }}%</div>
+            <div class="stat-label">Avg. Progress</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enrolled Courses Section -->
+    <div class="section-block">
+      <h2 class="section-title">My <span>Enrolled Courses</span></h2>
+      
+      <div class="enrolled-courses" *ngIf="enrolledCourses.length; else noCourses">
+        <div class="course-item card" *ngFor="let course of enrolledCourses">
+          <div class="course-content">
+            <div class="course-header">
+              <span class="tag-chip">{{ course.tag }}</span>
+              <span class="badge badge-{{ course.category }}">{{ course.category }}</span>
+            </div>
+            <h3 class="course-title">{{ course.title }}</h3>
+            <p class="course-desc">{{ course.description }}</p>
+            
+            <div class="course-meta">
+              <span class="meta-info">⭐ {{ course.rating }}</span>
+              <span class="meta-info">⏱ {{ course.duration }}</span>
+              <span class="meta-info" *ngIf="course.certification">🏆 Certificate</span>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-section">
+              <div class="progress-header">
+                <span class="progress-label">Progress</span>
+                <span class="progress-percent">{{ getCompletionPercentage() }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="fill" [style.width.%]="getCompletionPercentage()"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="course-actions">
+            <button class="btn btn-primary">Continue Learning</button>
+            <button class="btn btn-outline">View Certificate</button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noCourses>
+        <div class="empty-state">
+          <h3>📚 No courses yet</h3>
+          <p>Start your learning journey by enrolling in a course</p>
+          <a routerLink="/courses" class="btn btn-primary" style="margin-top:16px">Browse Courses</a>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Learning Achievements -->
+    <div class="section-block">
+      <h2 class="section-title">Learning <span>Achievements</span></h2>
+      <div class="achievements-grid">
+        <div class="achievement-badge card">
+          <span class="achievement-icon">🚀</span>
+          <div class="achievement-info">
+            <h4>First Course</h4>
+            <p>Enrolled in your first course</p>
+          </div>
+        </div>
+        
+        <div class="achievement-badge card" *ngIf="enrolledCourses.length >= 3">
+          <span class="achievement-icon">📚</span>
+          <div class="achievement-info">
+            <h4>Course Collector</h4>
+            <p>Enrolled in 3+ courses</p>
+          </div>
+        </div>
+        
+        <div class="achievement-badge card" *ngIf="totalSpent >= 10000">
+          <span class="achievement-icon">💎</span>
+          <div class="achievement-info">
+            <h4>Serious Learner</h4>
+            <p>Invested ₹10K+ in learning</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

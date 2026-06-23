@@ -1,0 +1,64 @@
+.detail-hero {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 0;
+
+  .breadcrumb { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; a { color: var(--primary); } }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+    align-items: start;
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+  }
+
+  h1 { font-size: 36px; font-weight: 800; margin: 12px 0; line-height: 1.2; }
+  .hero-desc { color: var(--text-secondary); font-size: 16px; line-height: 1.6; }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    margin-top: 20px; font-size: 14px; color: var(--text-secondary);
+    span { background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; }
+  }
+
+  .enroll-card {
+    .price { font-size: 32px; font-weight: 800; color: var(--accent); margin-bottom: 16px; }
+    .full-width { width: 100%; justify-content: center; }
+    .includes { list-style: none; margin-top: 16px; li { padding: 6px 0; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.05); } }
+  }
+}
+
+.detail-body { padding: 40px 20px 60px; }
+
+.section-block { margin-bottom: 48px; }
+
+.why-text { color: var(--text-secondary); font-size: 16px; line-height: 1.7; margin-top: 12px; }
+
+.curriculum-list {
+  display: grid; gap: 8px; margin-top: 16px;
+  .curriculum-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    .num { width: 28px; height: 28px; background: var(--gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  }
+}
+
+.mentor-card {
+  display: flex; align-items: center; gap: 20px;
+  margin-top: 16px;
+  .mentor-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  p { color: var(--text-secondary); font-size: 14px; }
+}
+
+.cert-card {
+  display: flex; align-items: center; gap: 20px;
+  margin-top: 16px;
+  .cert-icon { font-size: 40px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  p { color: var(--text-secondary); font-size: 14px; }
+}

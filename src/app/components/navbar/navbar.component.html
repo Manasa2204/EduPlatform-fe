@@ -1,0 +1,41 @@
+<nav class="navbar">
+  <div class="nav-brand" routerLink="/">
+    <span class="logo-icon">🎓</span>
+    <span class="logo-text">EduPlatform</span>
+  </div>
+
+  <div class="nav-links" *ngIf="auth.isLoggedIn()">
+    <ng-container [ngSwitch]="auth.getRole()">
+      <ng-container *ngSwitchCase="'student'">
+        <a routerLink="/courses" routerLinkActive="active">Courses</a>
+        <a routerLink="/profile" routerLinkActive="active">Profile</a>
+        <a routerLink="/cart" routerLinkActive="active">🛒 Cart</a>
+      </ng-container>
+      <ng-container *ngSwitchCase="'faculty'">
+        <a routerLink="/faculty" routerLinkActive="active">Dashboard</a>
+      </ng-container>
+      <ng-container *ngSwitchCase="'admin'">
+        <a routerLink="/admin" routerLinkActive="active">Admin Panel</a>
+      </ng-container>
+      <ng-container *ngSwitchCase="'hire_talent'">
+        <a routerLink="/hire-talent" routerLinkActive="active">Teach With Us</a>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div class="nav-actions">
+    <ng-container *ngIf="auth.isLoggedIn(); else guestNav">
+      <span class="user-chip">
+        <span class="avatar">{{ auth.getUser()?.name?.[0] }}</span>
+        {{ auth.getUser()?.name }}
+        <span class="role-tag">{{ auth.getRole() }}</span>
+      </span>
+      <button class="btn btn-outline" (click)="logout()">Logout</button>
+    </ng-container>
+    <ng-template #guestNav>
+      <a routerLink="/login" class="btn btn-outline">Login</a>
+      <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
+      <a routerLink="/hire-talent" class="btn" style="background:rgba(255,101,132,0.15);color:#FF6584;">Teach With Us</a>
+    </ng-template>
+  </div>
+</nav>

@@ -1,0 +1,49 @@
+<div class="cart-page">
+  <div class="page-header">
+    <h1>My Cart</h1>
+    <p>{{ cartItems.length }} course(s) in your cart</p>
+  </div>
+
+  <div class="container">
+    <div class="cart-layout" *ngIf="cartItems.length; else emptyCart">
+      <div class="cart-items">
+        <div class="cart-item card" *ngFor="let item of cartItems">
+          <div class="item-info">
+            <span class="tag-chip">{{ item.tag }}</span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+            <span class="duration">⏱ {{ item.duration }}</span>
+          </div>
+          <div class="item-actions">
+            <span class="price">₹{{ item.price | number }}</span>
+            <button class="btn btn-danger" (click)="remove(item.id)">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-summary card">
+        <h2>Order Summary</h2>
+        <div class="summary-row" *ngFor="let item of cartItems">
+          <span>{{ item.title }}</span>
+          <span>₹{{ item.price | number }}</span>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span class="total-price">₹{{ total | number }}</span>
+        </div>
+        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px" (click)="checkout()">
+          Proceed to Payment →
+        </button>
+      </div>
+    </div>
+
+    <ng-template #emptyCart>
+      <div class="empty-state">
+        <h3>🛒 Your cart is empty</h3>
+        <p>Browse and add courses to get started</p>
+        <a routerLink="/courses" class="btn btn-primary" style="margin-top:16px">Browse Courses</a>
+      </div>
+    </ng-template>
+  </div>
+</div>

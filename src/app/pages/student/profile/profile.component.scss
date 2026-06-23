@@ -1,0 +1,169 @@
+.profile-page { 
+  padding-bottom: 60px; 
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+  
+  @media (max-width: 900px) { 
+    grid-template-columns: 1fr; 
+  }
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 32px;
+  
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #FFFFFF;
+    flex-shrink: 0;
+  }
+  
+  .user-info {
+    flex: 1;
+    h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .user-email { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
+    .user-meta { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 4px;
+      .meta-item { font-size: 12px; color: var(--text-secondary); }
+    }
+  }
+  
+  .edit-btn { margin-left: auto; }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  
+  .stat-icon { font-size: 24px; }
+  .stat-content {
+    .stat-number { 
+      font-size: 24px; 
+      font-weight: 800; 
+      background: var(--gradient); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    .stat-label { font-size: 12px; color: var(--text-secondary); }
+  }
+}
+
+.section-block { 
+  margin-bottom: 48px; 
+}
+
+.enrolled-courses {
+  display: grid;
+  gap: 20px;
+}
+
+.course-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  
+  @media (max-width: 700px) { 
+    flex-direction: column; 
+    gap: 16px;
+  }
+  
+  .course-content { 
+    flex: 1; 
+    
+    .course-header { 
+      display: flex; 
+      gap: 12px; 
+      margin-bottom: 8px; 
+    }
+    
+    .course-title { 
+      font-size: 18px; 
+      font-weight: 700; 
+      margin-bottom: 6px; 
+    }
+    
+    .course-desc { 
+      color: var(--text-secondary); 
+      font-size: 13px; 
+      margin-bottom: 12px; 
+      line-height: 1.5;
+    }
+    
+    .course-meta { 
+      display: flex; 
+      gap: 16px; 
+      margin-bottom: 16px;
+      .meta-info { font-size: 12px; color: var(--text-secondary); }
+    }
+  }
+  
+  .progress-section {
+    .progress-header { 
+      display: flex; 
+      justify-content: space-between; 
+      margin-bottom: 8px;
+      .progress-label { font-size: 13px; font-weight: 600; }
+      .progress-percent { font-size: 13px; color: var(--primary); font-weight: 700; }
+    }
+  }
+  
+  .course-actions { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    min-width: 180px;
+    
+    @media (max-width: 700px) { 
+      flex-direction: row; 
+      min-width: auto;
+    }
+  }
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  
+  .achievement-icon { 
+    font-size: 28px; 
+  }
+  
+  .achievement-info {
+    h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    p { font-size: 12px; color: var(--text-secondary); }
+  }
+}

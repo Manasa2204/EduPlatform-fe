@@ -1,0 +1,55 @@
+<div class="hire-page">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+    </div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <span class="hero-badge">🚀 Teach With Us</span>
+        <h1>Share Your Knowledge.<br>Change Lives. <span>Earn More.</span></h1>
+        <p>Join 500+ instructors on EduPlatform. Build courses, teach globally, and earn passive income from your expertise.</p>
+        <div class="hero-stats">
+          <div class="stat"><div class="v">500+</div><div class="l">Instructors</div></div>
+          <div class="stat"><div class="v">50K+</div><div class="l">Students</div></div>
+          <div class="stat"><div class="v">₹5L+</div><div class="l">Avg Monthly</div></div>
+        </div>
+        <a routerLink="/hire-talent/apply" class="btn btn-primary btn-lg">Get Started →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reasons -->
+  <section class="reasons-section container">
+    <div class="section-title" style="text-align:center;margin-bottom:40px">
+      Why <span>Teach With Us?</span>
+    </div>
+    <div class="grid-3">
+      <div class="reason-card card" *ngFor="let r of reasons">
+        <span class="reason-icon">{{ r.icon }}</span>
+        <h3>{{ r.title }}</h3>
+        <p>{{ r.desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Begin -->
+  <section class="steps-section">
+    <div class="container">
+      <div class="section-title" style="text-align:center;margin-bottom:40px">
+        How to <span>Get Started</span>
+      </div>
+      <div class="steps-row">
+        <div class="step" *ngFor="let s of steps">
+          <div class="step-num">{{ s.num }}</div>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.desc }}</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:48px">
+        <a routerLink="/hire-talent/apply" class="btn btn-primary btn-lg">Apply Now →</a>
+      </div>
+    </div>
+  </section>
+</div>
