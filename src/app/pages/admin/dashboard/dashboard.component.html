@@ -392,3 +392,37 @@
     </form>
   </div>
 </div>
+
+<!-- Credentials Generated Modal -->
+<div class="modal-overlay" *ngIf="approvedCredentials">
+  <div class="modal credentials-modal" style="max-width: 450px;">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <span style="font-size: 40px;">🔑</span>
+      <h2 style="margin-top: 10px;">Faculty Credentials Assigned</h2>
+      <p style="color: var(--text-muted); font-size: 14px;">The application has been approved and faculty account created successfully.</p>
+    </div>
+    
+    <div class="card" style="background: rgba(255, 101, 132, 0.05); border: 1px solid rgba(255, 101, 132, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+      <div style="margin-bottom: 12px;">
+        <label style="display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">Email Address</label>
+        <div style="font-family: monospace; font-size: 16px; font-weight: 600; color: var(--text);">{{ approvedCredentials.email }}</div>
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">Temporary Password</label>
+        <div style="font-family: monospace; font-size: 16px; font-weight: 600; color: #FF6584;">{{ approvedCredentials.password }}</div>
+      </div>
+    </div>
+
+    <div style="background: #FFF9E6; border: 1px solid #FFE0B2; color: #B78103; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 24px; display: flex; gap: 8px; align-items: flex-start;">
+      <span>⚠️</span>
+      <span>Please copy and securely share these credentials with the faculty member. The password will not be shown again.</span>
+    </div>
+
+    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+      <button type="button" class="btn btn-primary" (click)="approvedCredentials = null">
+        Done
+      </button>
+    </div>
+  </div>
+</div>
+

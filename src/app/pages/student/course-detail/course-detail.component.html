@@ -1,10 +1,14 @@
 <div class="detail-page" *ngIf="!loading && course">
   <div class="detail-hero">
     <div class="container">
-      <div class="breadcrumb"><a routerLink="/courses">← All Courses</a> / {{ course.title }}</div>
+      <div class="breadcrumb">
+        <a routerLink="/courses">← All Courses</a> / {{ course.title }}
+      </div>
       <div class="hero-content">
         <div class="hero-left">
-          <span class="badge badge-{{course.category}}">{{ course.category }}</span>
+          <span class="badge badge-{{ course.category }}">{{
+            course.category
+          }}</span>
           <h1>{{ course.title }}</h1>
           <p class="hero-desc">{{ course.description }}</p>
           <div class="hero-stats">
@@ -16,11 +20,48 @@
         </div>
         <div class="enroll-card card">
           <div class="price">₹{{ course.price | number }}</div>
-          <div class="alert alert-success" *ngIf="message" style="margin-bottom:12px">{{ message }}</div>
-          <button class="btn btn-primary btn-lg full-width" (click)="addToCart()" [disabled]="added">
-            {{ added ? '✓ Added to Cart' : '🛒 Add to Cart' }}
+          <div
+            class="alert alert-success"
+            *ngIf="message"
+            style="margin-bottom: 12px"
+          >
+            {{ message }}
+          </div>
+          <button
+            class="btn btn-primary btn-lg full-width"
+            (click)="addToCart()"
+            [disabled]="added || enrolled"
+          >
+            {{
+              enrolled
+                ? "✓ Enrolled"
+                : added
+                  ? "✓ Added to Cart"
+                  : "🛒 Add to Cart"
+            }}
           </button>
-          <a routerLink="/cart" class="btn btn-outline btn-lg full-width" style="margin-top:10px;text-align:center;justify-content:center" *ngIf="added">
+          <button
+            class="btn btn-success btn-lg full-width"
+            style="
+              margin-top: 10px;
+              text-align: center;
+              justify-content: center;
+            "
+            (click)="enrollNow()"
+            *ngIf="!enrolled"
+          >
+            Enroll Now
+          </button>
+          <a
+            routerLink="/cart"
+            class="btn btn-outline btn-lg full-width"
+            style="
+              margin-top: 10px;
+              text-align: center;
+              justify-content: center;
+            "
+            *ngIf="added && !enrolled"
+          >
             Proceed to Cart →
           </a>
           <ul class="includes">
@@ -36,14 +77,19 @@
 
   <div class="container detail-body">
     <div class="section-block">
-      <h2 class="section-title">Why <span>{{ course.title }}?</span></h2>
+      <h2 class="section-title">
+        Why <span>{{ course.title }}?</span>
+      </h2>
       <p class="why-text">{{ course.why }}</p>
     </div>
 
     <div class="section-block">
       <h2 class="section-title"><span>Course Curriculum</span></h2>
       <div class="curriculum-list">
-        <div class="curriculum-item" *ngFor="let item of course.curriculum; let i = index">
+        <div
+          class="curriculum-item"
+          *ngFor="let item of course.curriculum; let i = index"
+        >
           <span class="num">{{ i + 1 }}</span>
           <span>{{ item }}</span>
         </div>
@@ -53,7 +99,11 @@
     <div class="section-block">
       <h2 class="section-title">Meet Your <span>Mentor</span></h2>
       <div class="mentor-card card">
-        <img [src]="course.mentor.avatar" [alt]="course.mentor.name" class="mentor-avatar">
+        <img
+          [src]="course.mentor.avatar"
+          [alt]="course.mentor.name"
+          class="mentor-avatar"
+        />
         <div>
           <h3>{{ course.mentor.name }}</h3>
           <p>{{ course.mentor.bio }}</p>
@@ -67,7 +117,10 @@
         <span class="cert-icon">🏆</span>
         <div>
           <h3>Industry-Recognized Certificate</h3>
-          <p>Earn a certificate upon completing all modules. Shareable on LinkedIn and your resume.</p>
+          <p>
+            Earn a certificate upon completing all modules. Shareable on
+            LinkedIn and your resume.
+          </p>
         </div>
       </div>
     </div>

@@ -15,7 +15,6 @@ export class NavbarComponent {
     if (role === 'student') return '/courses';
     if (role === 'faculty') return '/faculty';
     if (role === 'admin') return '/admin';
-    if (role === 'hire_talent') return '/hire-talent';
     return '/login';
   }
 

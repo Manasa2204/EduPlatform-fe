@@ -134,218 +134,260 @@
         }}</a>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="activeTab === 'courses'">
-    <div
-      class="schedule-toolbar"
-      style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      "
-    >
-      <h2>My Courses</h2>
-      <button class="btn btn-primary" (click)="openCourseModal()">
-        + New Course Draft
-      </button>
-    </div>
+    <div *ngIf="activeTab === 'courses'">
+      <div
+        class="schedule-toolbar"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        "
+      >
+        <h2>My Courses</h2>
+        <button class="btn btn-primary" (click)="openCourseModal()">
+          + New Course Draft
+        </button>
+      </div>
 
-    <div class="schedule-grid">
-      <div class="schedule-card card" *ngFor="let course of courses">
-        <div class="sch-header">
-          <h3>{{ course.title }}</h3>
-          <span class="tag-chip">{{ course.status }}</span>
-        </div>
-        <div class="sch-details">
-          <p>{{ course.description }}</p>
-          <p><strong>Category:</strong> {{ course.category }}</p>
-          <p><strong>Price:</strong> ₹{{ course.price | number }}</p>
-        </div>
-        <div class="app-actions">
-          <button
-            class="btn btn-success"
-            *ngIf="course.status === 'draft'"
-            (click)="submitCourse(course)"
-          >
-            Submit for Review
-          </button>
-          <span class="text-muted" *ngIf="course.status === 'pending'">
-            Pending approval
-          </span>
-          <span class="text-success" *ngIf="course.status === 'approved'">
-            Approved course
-          </span>
+      <div class="courses-grid">
+        <div class="faculty-course-card" *ngFor="let course of courses">
+          
+          <div class="course-card-banner">
+            <div class="course-status-badge" 
+                 [ngClass]="{
+                   'status-draft': course.status === 'draft',
+                   'status-pending': course.status === 'pending',
+                   'status-approved': course.status === 'approved'
+                 }">
+              {{ course.status }}
+            </div>
+            <div class="badges-container">
+              <span class="tag-chip">{{ course.category }}</span>
+              <span class="tag-chip" *ngIf="course.tag">{{ course.tag }}</span>
+            </div>
+          </div>
+
+          <div class="course-card-body">
+            <h3 class="course-title">{{ course.title }}</h3>
+            <p class="course-desc">{{ course.description }}</p>
+            
+            <div class="why-section" *ngIf="course.why">
+              <strong>Why take this:</strong> {{ course.why }}
+            </div>
+          </div>
+
+          <div class="course-stats-grid">
+            <div class="stat-item">
+              <span class="stat-icon">💰</span>
+              <span class="price-value">₹{{ course.price | number }}</span>
+            </div>
+            <div class="stat-item" *ngIf="course.duration">
+              <span class="stat-icon">⏱️</span>
+              <span>{{ course.duration }}</span>
+            </div>
+          </div>
+
+          <div class="course-curriculum-preview" *ngIf="course.curriculum && course.curriculum.length > 0">
+            <div class="curriculum-label">Curriculum Preview</div>
+            <ul class="curriculum-list">
+              <li><span class="bullet">•</span> {{ course.curriculum[0] }}</li>
+            </ul>
+            <div class="more-modules" *ngIf="course.curriculum.length > 1">
+              + {{ course.curriculum.length - 1 }} more module(s)
+            </div>
+          </div>
+
+          <div class="course-card-footer">
+            <button
+              class="btn btn-success"
+              *ngIf="course.status === 'draft'"
+              (click)="submitCourse(course)"
+            >
+              Submit for Review
+            </button>
+            <span class="status-text text-muted" *ngIf="course.status === 'pending'">
+              ⏳ Pending approval
+            </span>
+            <span class="status-text text-success" *ngIf="course.status === 'approved'">
+              ✅ Approved course
+            </span>
+          </div>
+          
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Session Modal -->
-<div class="modal-overlay" *ngIf="showCourseModal">
-  <div class="modal">
-    <h2>📚 Create Course Draft</h2>
-    <div class="form-group">
-      <label>Title</label>
-      <input
-        type="text"
-        [(ngModel)]="newCourse.title"
-        placeholder="Course title"
-      />
-    </div>
-    <div class="form-row-2">
+  <!-- Session Modal -->
+  <div class="modal-overlay" *ngIf="showCourseModal">
+    <div class="modal">
+      <h2>📚 Create Course Draft</h2>
       <div class="form-group">
-        <label>Category</label>
+        <label>Title</label>
         <input
           type="text"
-          [(ngModel)]="newCourse.category"
-          placeholder="trending"
+          [(ngModel)]="newCourse.title"
+          placeholder="Course title"
+        />
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Category</label>
+          <input
+            type="text"
+            [(ngModel)]="newCourse.category"
+            placeholder="trending"
+          />
+        </div>
+        <div class="form-group">
+          <label>Tag</label>
+          <input
+            type="text"
+            [(ngModel)]="newCourse.tag"
+            placeholder="JavaScript"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="newCourse.description"
+          rows="3"
+          placeholder="Short course summary"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label>Why this course?</label>
+        <textarea
+          [(ngModel)]="newCourse.why"
+          rows="2"
+          placeholder="What students will gain"
+        ></textarea>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Price</label>
+          <input
+            type="number"
+            [(ngModel)]="newCourse.price"
+            placeholder="₹4999"
+          />
+        </div>
+        <div class="form-group">
+          <label>Duration</label>
+          <input
+            type="text"
+            [(ngModel)]="newCourse.duration"
+            placeholder="8 weeks"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Curriculum</label>
+        <textarea
+          [(ngModel)]="newCourse.curriculum[0]"
+          rows="4"
+          placeholder="Enter a single curriculum heading"
+        ></textarea>
+        <small>One item is enough for a draft; you can expand it later.</small>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 8px">
+        <button class="btn btn-primary" (click)="createCourse()">
+          Create Draft
+        </button>
+        <button class="btn btn-outline" (click)="showCourseModal = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Modal -->
+  <div class="modal-overlay" *ngIf="showSessionModal">
+    <div class="modal">
+      <h2>📅 Schedule Live Session</h2>
+      <div class="form-group">
+        <label>Course</label>
+        <select [(ngModel)]="session.courseId" required>
+          <option value="" disabled selected>Select course</option>
+          <option *ngFor="let course of courses" [value]="course.id">
+            {{ course.title }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Session Title</label>
+        <input
+          type="text"
+          [(ngModel)]="session.title"
+          placeholder="Express Fundamentals"
+          required
         />
       </div>
       <div class="form-group">
-        <label>Tag</label>
-        <input
-          type="text"
-          [(ngModel)]="newCourse.tag"
-          placeholder="JavaScript"
-        />
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="session.description"
+          rows="3"
+          placeholder="Session overview"
+        ></textarea>
       </div>
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea
-        [(ngModel)]="newCourse.description"
-        rows="3"
-        placeholder="Short course summary"
-      ></textarea>
-    </div>
-    <div class="form-group">
-      <label>Why this course?</label>
-      <textarea
-        [(ngModel)]="newCourse.why"
-        rows="2"
-        placeholder="What students will gain"
-      ></textarea>
-    </div>
-    <div class="form-row-2">
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" [(ngModel)]="session.date" required />
+        </div>
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" [(ngModel)]="session.time" required />
+        </div>
+      </div>
       <div class="form-group">
-        <label>Price</label>
+        <label>Duration (minutes)</label>
         <input
           type="number"
-          [(ngModel)]="newCourse.price"
-          placeholder="₹4999"
+          [(ngModel)]="session.duration"
+          placeholder="90"
+          required
         />
       </div>
+      <div style="display: flex; gap: 12px; margin-top: 8px">
+        <button class="btn btn-primary" (click)="createSession()">
+          Schedule Session
+        </button>
+        <button class="btn btn-outline" (click)="showSessionModal = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Modal -->
+  <div class="modal-overlay" *ngIf="showZoomModal">
+    <div class="modal">
+      <h2>📹 Create Zoom Meeting</h2>
       <div class="form-group">
-        <label>Duration</label>
+        <label>Topic</label>
         <input
           type="text"
-          [(ngModel)]="newCourse.duration"
-          placeholder="8 weeks"
+          [(ngModel)]="zoom.topic"
+          placeholder="Meeting topic"
         />
       </div>
-    </div>
-    <div class="form-group">
-      <label>Curriculum</label>
-      <textarea
-        [(ngModel)]="newCourse.curriculum[0]"
-        rows="4"
-        placeholder="Enter a single curriculum heading"
-      ></textarea>
-      <small>One item is enough for a draft; you can expand it later.</small>
-    </div>
-    <div style="display: flex; gap: 12px; margin-top: 8px">
-      <button class="btn btn-primary" (click)="createCourse()">
-        Create Draft
-      </button>
-      <button class="btn btn-outline" (click)="showCourseModal = false">
-        Cancel
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Zoom Modal -->
-<div class="modal-overlay" *ngIf="showSessionModal">
-  <div class="modal">
-    <h2>📅 Schedule Live Session</h2>
-    <div class="form-group">
-      <label>Course</label>
-      <select [(ngModel)]="session.courseId" required>
-        <option value="" disabled selected>Select course</option>
-        <option *ngFor="let course of courses" [value]="course.id">
-          {{ course.title }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Session Title</label>
-      <input
-        type="text"
-        [(ngModel)]="session.title"
-        placeholder="Express Fundamentals"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea
-        [(ngModel)]="session.description"
-        rows="3"
-        placeholder="Session overview"
-      ></textarea>
-    </div>
-    <div class="form-row-2">
       <div class="form-group">
-        <label>Date</label>
-        <input type="date" [(ngModel)]="session.date" required />
+        <label>Start Time</label>
+        <input type="datetime-local" [(ngModel)]="zoom.startTime" />
       </div>
-      <div class="form-group">
-        <label>Time</label>
-        <input type="time" [(ngModel)]="session.time" required />
+      <div style="display: flex; gap: 12px; margin-top: 8px">
+        <button class="btn btn-primary" (click)="createZoom()">
+          Create & Share
+        </button>
+        <button class="btn btn-outline" (click)="showZoomModal = false">
+          Cancel
+        </button>
       </div>
-    </div>
-    <div class="form-group">
-      <label>Duration (minutes)</label>
-      <input
-        type="number"
-        [(ngModel)]="session.duration"
-        placeholder="90"
-        required
-      />
-    </div>
-    <div style="display: flex; gap: 12px; margin-top: 8px">
-      <button class="btn btn-primary" (click)="createSession()">
-        Schedule Session
-      </button>
-      <button class="btn btn-outline" (click)="showSessionModal = false">
-        Cancel
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Zoom Modal -->
-<div class="modal-overlay" *ngIf="showZoomModal">
-  <div class="modal">
-    <h2>📹 Create Zoom Meeting</h2>
-    <div class="form-group">
-      <label>Topic</label>
-      <input type="text" [(ngModel)]="zoom.topic" placeholder="Meeting topic" />
-    </div>
-    <div class="form-group">
-      <label>Start Time</label>
-      <input type="datetime-local" [(ngModel)]="zoom.startTime" />
-    </div>
-    <div style="display: flex; gap: 12px; margin-top: 8px">
-      <button class="btn btn-primary" (click)="createZoom()">
-        Create & Share
-      </button>
-      <button class="btn btn-outline" (click)="showZoomModal = false">
-        Cancel
-      </button>
     </div>
   </div>
 </div>

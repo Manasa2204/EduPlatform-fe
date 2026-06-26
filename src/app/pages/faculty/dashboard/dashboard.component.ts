@@ -14,6 +14,7 @@ export class FacultyDashboardComponent implements OnInit {
   activeTab = 'students';
   showSessionModal = false;
   showCourseModal = false;
+  showZoomModal = false;
   selectedSchedule: any = null;
   zoomResult: string = '';
   zoom = { scheduleId: '', topic: '', startTime: '' };

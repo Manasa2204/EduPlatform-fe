@@ -37,7 +37,6 @@ export class LoginComponent {
       student: '/courses',
       faculty: '/faculty',
       admin: '/admin',
-      hire_talent: '/hire-talent',
     };
     this.router.navigate([map[role] || '/login']);
   }
@@ -47,7 +46,6 @@ export class LoginComponent {
       student: 'student@demo.com',
       faculty: 'faculty@demo.com',
       admin: 'admin@demo.com',
-      hire_talent: 'hire@demo.com',
     };
     this.email = demos[role];
     this.password = 'password';

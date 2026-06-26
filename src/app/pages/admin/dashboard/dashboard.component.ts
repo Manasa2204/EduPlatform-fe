@@ -24,6 +24,7 @@ export class AdminDashboardComponent implements OnInit {
   selectedCourse: any = null;
   selectedFaculty: any = null;
   editingCourse: any = null;
+  approvedCredentials: any = null;
 
   newCourse = {
     title: '',
@@ -83,8 +84,12 @@ export class AdminDashboardComponent implements OnInit {
 
   // Application Management
   approve(id: string) {
-    this.adminService.approveApplication(id).subscribe(() => {
-      this.showSuccess('Application approved and faculty added!');
+    this.adminService.approveApplication(id).subscribe((res: any) => {
+      this.approvedCredentials = {
+        email: res.email,
+        password: res.password
+      };
+      this.showSuccess('Application approved and faculty credentials generated!');
       this.loadAll();
     });
   }
