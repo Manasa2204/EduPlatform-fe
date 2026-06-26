@@ -27,32 +27,16 @@
     </div>
 
     <div class="tab-bar">
-      <button
-        class="tab"
-        [class.active]="activeTab === 'applications'"
-        (click)="activeTab = 'applications'"
-      >
+      <button class="tab" [class.active]="activeTab === 'applications'" (click)="activeTab = 'applications'">
         📋 Applications
       </button>
-      <button
-        class="tab"
-        [class.active]="activeTab === 'pending'"
-        (click)="activeTab = 'pending'"
-      >
+      <button class="tab" [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'">
         ⏳ Pending Courses
       </button>
-      <button
-        class="tab"
-        [class.active]="activeTab === 'faculty'"
-        (click)="activeTab = 'faculty'"
-      >
+      <button class="tab" [class.active]="activeTab === 'faculty'" (click)="activeTab = 'faculty'">
         👨🏫 Faculty
       </button>
-      <button
-        class="tab"
-        [class.active]="activeTab === 'courses'"
-        (click)="activeTab = 'courses'"
-      >
+      <button class="tab" [class.active]="activeTab === 'courses'" (click)="activeTab = 'courses'">
         📚 Courses
       </button>
     </div>
@@ -69,7 +53,7 @@
             <h3>{{ app.name }}</h3>
             <span class="status-badge" [class]="app.status">{{
               app.status
-            }}</span>
+              }}</span>
           </div>
           <div class="app-details">
             <p><strong>Email:</strong> {{ app.email }}</p>
@@ -84,24 +68,9 @@
             <button class="btn btn-success" (click)="approve(app.id)">
               ✓ Approve Faculty
             </button>
-            <button
-              class="btn btn-primary"
-              (click)="createCourseFromApplication(app.id)"
-            >
-              📚 Create Course
-            </button>
           </div>
           <div class="app-actions" *ngIf="app.status === 'approved'">
-            <span
-              style="color: var(--primary); font-size: 13px; font-weight: 600"
-              >✅ Approved</span
-            >
-            <button
-              class="btn btn-outline"
-              (click)="createCourseFromApplication(app.id)"
-            >
-              📚 Create Course
-            </button>
+            <span style="color: var(--primary); font-size: 13px; font-weight: 600">✅ Approved</span>
           </div>
         </div>
       </div>
@@ -114,10 +83,7 @@
         <p>Courses submitted by faculty for approval will appear here.</p>
       </div>
       <div class="applications-grid" *ngIf="pendingCourses.length">
-        <div
-          class="application-card card"
-          *ngFor="let course of pendingCourses"
-        >
+        <div class="application-card card" *ngFor="let course of pendingCourses">
           <div class="app-header">
             <h3>{{ course.title }}</h3>
             <span class="status-badge pending">{{ course.status }}</span>
@@ -153,12 +119,12 @@
           <h3>{{ f.name }}</h3>
           <p>{{ f.email }}</p>
           <span class="tag-chip">{{ f.expertise }}</span>
-          <div class="faculty-courses" *ngIf="f.courses.length">
+          <div class="faculty-courses" *ngIf="f.courses?.length">
             <p class="courses-label">Teaching:</p>
             <div class="course-chips">
               <span class="course-chip" *ngFor="let course of f.courses">{{
                 course
-              }}</span>
+                }}</span>
             </div>
           </div>
           <span class="status-badge active">Active</span>
@@ -168,19 +134,14 @@
 
     <!-- Courses Tab -->
     <div *ngIf="activeTab === 'courses'">
-      <div
-        style="
+      <div style="
           display: flex;
           justify-content: space-between;
           margin-bottom: 20px;
           align-items: center;
-        "
-      >
+        ">
         <h2>All Courses</h2>
-        <button
-          class="btn btn-outline"
-          (click)="showCourseModal = true; resetForm()"
-        >
+        <button class="btn btn-outline" (click)="showCourseModal = true; resetForm()">
           + Manual Course
         </button>
       </div>
@@ -206,7 +167,7 @@
               <td>
                 <span class="badge badge-{{ c.category }}">{{
                   c.category
-                }}</span>
+                  }}</span>
               </td>
               <td>
                 <span class="tag-chip">{{ c.tag }}</span>
@@ -228,9 +189,9 @@
     <h2>
       📚
       {{
-        selectedApplication
-          ? "Create Course from Application"
-          : "Create New Course"
+      selectedApplication
+      ? "Create Course from Application"
+      : "Create New Course"
       }}
     </h2>
 
@@ -253,22 +214,12 @@
           <div class="form-row-2">
             <div class="form-group">
               <label>Course Title</label>
-              <input
-                type="text"
-                [(ngModel)]="newCourse.title"
-                name="title"
-                placeholder="e.g., Java Masterclass"
-                required
-              />
+              <input type="text" [(ngModel)]="newCourse.title" name="title" placeholder="e.g., Java Masterclass"
+                required />
             </div>
             <div class="form-group">
               <label>Technology Tag</label>
-              <input
-                type="text"
-                [(ngModel)]="newCourse.tag"
-                name="tag"
-                placeholder="e.g., Java, Python, DevOps"
-              />
+              <input type="text" [(ngModel)]="newCourse.tag" name="tag" placeholder="e.g., Java, Python, DevOps" />
             </div>
           </div>
           <div class="form-row-2">
@@ -282,83 +233,57 @@
             </div>
             <div class="form-group">
               <label>Price (₹)</label>
-              <input
-                type="number"
-                [(ngModel)]="newCourse.price"
-                name="price"
-                placeholder="4999"
-              />
+              <input type="number" [(ngModel)]="newCourse.price" name="price" placeholder="4999" />
             </div>
           </div>
           <div class="form-group">
             <label>Duration</label>
-            <input
-              type="text"
-              [(ngModel)]="newCourse.duration"
-              name="duration"
-              placeholder="e.g., 12 weeks, 3 months"
-            />
+            <input type="text" [(ngModel)]="newCourse.duration" name="duration"
+              placeholder="e.g., 12 weeks, 3 months" />
           </div>
           <div class="form-group">
             <label>Course Description</label>
-            <textarea
-              [(ngModel)]="newCourse.description"
-              name="description"
-              placeholder="What will students learn in this course?"
-              rows="3"
-            ></textarea>
+            <textarea [(ngModel)]="newCourse.description" name="description"
+              placeholder="What will students learn in this course?" rows="3"></textarea>
           </div>
           <div class="form-group">
             <label>Why Take This Course?</label>
-            <textarea
-              [(ngModel)]="newCourse.why"
-              name="why"
-              placeholder="Benefits and career advantages..."
-              rows="3"
-            ></textarea>
+            <textarea [(ngModel)]="newCourse.why" name="why" placeholder="Benefits and career advantages..."
+              rows="3"></textarea>
           </div>
         </div>
 
         <!-- Mentor Information -->
         <div class="form-section">
           <h3>👨🏫 Mentor Information</h3>
+          
+          <div class="form-group" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <label>Select Faculty Member</label>
+            <select class="form-control" [(ngModel)]="selectedFacultyEmail" name="facultySelect" (change)="onFacultySelect($event)" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface);" required>
+              <option value="" disabled selected>-- Select Faculty --</option>
+              <option *ngFor="let f of faculty" [value]="f.email">{{ f.name }} ({{ f.expertise }})</option>
+            </select>
+          </div>
+
           <div class="form-row-2">
             <div class="form-group">
               <label>Mentor Name</label>
-              <input
-                type="text"
-                [(ngModel)]="newMentor.name"
-                name="mentorName"
-                placeholder="Instructor name"
-              />
+              <input type="text" [(ngModel)]="newMentor.name" name="mentorName" placeholder="Instructor name" readonly />
             </div>
             <div class="form-group">
               <label>Mentor Email</label>
-              <input
-                type="email"
-                [(ngModel)]="newMentor.email"
-                name="mentorEmail"
-                placeholder="mentor@email.com"
-              />
+              <input type="email" [(ngModel)]="newMentor.email" name="mentorEmail" placeholder="mentor@email.com" readonly />
             </div>
           </div>
           <div class="form-group">
             <label>Mentor Bio</label>
-            <textarea
-              [(ngModel)]="newMentor.bio"
-              name="mentorBio"
-              placeholder="Professional background, experience, achievements..."
-              rows="3"
-            ></textarea>
+            <textarea [(ngModel)]="newMentor.bio" name="mentorBio"
+              placeholder="Professional background, experience, achievements..." rows="3" readonly></textarea>
           </div>
           <div class="form-group">
             <label>Avatar URL (optional)</label>
-            <input
-              type="url"
-              [(ngModel)]="newMentor.avatar"
-              name="mentorAvatar"
-              placeholder="https://example.com/photo.jpg"
-            />
+            <input type="url" [(ngModel)]="newMentor.avatar" name="mentorAvatar"
+              placeholder="https://example.com/photo.jpg" readonly />
           </div>
         </div>
 
@@ -367,12 +292,9 @@
           <h3>📋 Course Curriculum</h3>
           <div class="form-group">
             <label>Curriculum (one topic per line)</label>
-            <textarea
-              [(ngModel)]="curriculumInput"
-              name="curriculum"
+            <textarea [(ngModel)]="curriculumInput" name="curriculum"
               placeholder="Module 1: Introduction&#10;Module 2: Core Concepts&#10;Module 3: Advanced Topics&#10;..."
-              rows="6"
-            ></textarea>
+              rows="6"></textarea>
           </div>
         </div>
       </div>
@@ -381,11 +303,7 @@
         <button type="submit" class="btn btn-primary btn-lg">
           Create Course
         </button>
-        <button
-          type="button"
-          class="btn btn-outline"
-          (click)="showCourseModal = false"
-        >
+        <button type="button" class="btn btn-outline" (click)="showCourseModal = false">
           Cancel
         </button>
       </div>
@@ -399,23 +317,33 @@
     <div style="text-align: center; margin-bottom: 20px;">
       <span style="font-size: 40px;">🔑</span>
       <h2 style="margin-top: 10px;">Faculty Credentials Assigned</h2>
-      <p style="color: var(--text-muted); font-size: 14px;">The application has been approved and faculty account created successfully.</p>
+      <p style="color: var(--text-muted); font-size: 14px;">The application has been approved and faculty account
+        created successfully.</p>
     </div>
-    
-    <div class="card" style="background: rgba(255, 101, 132, 0.05); border: 1px solid rgba(255, 101, 132, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+
+    <div class="card"
+      style="background: rgba(255, 101, 132, 0.05); border: 1px solid rgba(255, 101, 132, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
       <div style="margin-bottom: 12px;">
-        <label style="display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">Email Address</label>
-        <div style="font-family: monospace; font-size: 16px; font-weight: 600; color: var(--text);">{{ approvedCredentials.email }}</div>
+        <label
+          style="display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">Email
+          Address</label>
+        <div style="font-family: monospace; font-size: 16px; font-weight: 600; color: var(--text);">{{
+          approvedCredentials.email }}</div>
       </div>
       <div>
-        <label style="display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">Temporary Password</label>
-        <div style="font-family: monospace; font-size: 16px; font-weight: 600; color: #FF6584;">{{ approvedCredentials.password }}</div>
+        <label
+          style="display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">Temporary
+          Password</label>
+        <div style="font-family: monospace; font-size: 16px; font-weight: 600; color: #FF6584;">{{
+          approvedCredentials.password }}</div>
       </div>
     </div>
 
-    <div style="background: #FFF9E6; border: 1px solid #FFE0B2; color: #B78103; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 24px; display: flex; gap: 8px; align-items: flex-start;">
+    <div
+      style="background: #FFF9E6; border: 1px solid #FFE0B2; color: #B78103; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 24px; display: flex; gap: 8px; align-items: flex-start;">
       <span>⚠️</span>
-      <span>Please copy and securely share these credentials with the faculty member. The password will not be shown again.</span>
+      <span>Please copy and securely share these credentials with the faculty member. The password will not be shown
+        again.</span>
     </div>
 
     <div style="display: flex; gap: 12px; justify-content: flex-end;">
@@ -425,4 +353,3 @@
     </div>
   </div>
 </div>
-

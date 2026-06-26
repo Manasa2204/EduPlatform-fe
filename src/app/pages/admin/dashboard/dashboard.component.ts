@@ -26,6 +26,9 @@ export class AdminDashboardComponent implements OnInit {
   editingCourse: any = null;
   approvedCredentials: any = null;
 
+  selectedFacultyEmail = '';
+  selectedFacultyId: string | null = null;
+
   newCourse = {
     title: '',
     category: 'trending',
@@ -45,7 +48,7 @@ export class AdminDashboardComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private courseService: CourseService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadAll();
@@ -84,13 +87,18 @@ export class AdminDashboardComponent implements OnInit {
 
   // Application Management
   approve(id: string) {
-    this.adminService.approveApplication(id).subscribe((res: any) => {
-      this.approvedCredentials = {
-        email: res.email,
-        password: res.password
-      };
-      this.showSuccess('Application approved and faculty credentials generated!');
-      this.loadAll();
+    this.adminService.approveApplication(id).subscribe({
+      next: (res: any) => {
+        this.approvedCredentials = {
+          email: res.email,
+          password: res.password
+        };
+        this.showSuccess('Application approved and faculty credentials generated!');
+        this.loadAll();
+      },
+      error: (err: any) => {
+        this.showError(err.error?.message || 'Failed to approve application.');
+      }
     });
   }
 
@@ -99,14 +107,7 @@ export class AdminDashboardComponent implements OnInit {
     this.showFacultyModal = true;
   }
 
-  // Course Creation from Application
-  createCourseFromApplication(applicationId: string) {
-    this.adminService.getApplication(applicationId).subscribe((app) => {
-      this.selectedApplication = app;
-      this.prefillCourseData(app);
-      this.showCourseModal = true;
-    });
-  }
+
 
   // Manual Course Creation
   createManualCourse() {
@@ -134,32 +135,32 @@ export class AdminDashboardComponent implements OnInit {
     const email = event.target.value;
     if (!email) {
       this.resetMentorData();
+      this.selectedFacultyId = null;
       return;
     }
 
     const facultyMember = this.faculty.find((f) => f.email === email);
-    if (
-      facultyMember &&
-      facultyMember.applications &&
-      facultyMember.applications.length > 0
-    ) {
-      // Use the first application for mentor data (or let admin choose)
-      const app = facultyMember.applications[0];
+    if (facultyMember) {
+      this.selectedFacultyId = facultyMember.id;
+      const app = facultyMember.applications?.[0];
+      
       this.newMentor = {
-        name: app.name,
-        email: app.email,
-        bio: app.bio,
-        avatar: `https://i.pravatar.cc/100?u=${app.email}`,
+        name: facultyMember.name,
+        email: facultyMember.email,
+        bio: app?.bio || '',
+        avatar: `https://i.pravatar.cc/100?u=${facultyMember.email}`,
       };
 
       // Optionally prefill course data too
-      if (!this.newCourse.title) {
-        this.newCourse.tag = app.expertise.split(',')[0].trim();
-        this.newCourse.why = `Learn ${app.expertise} from an industry expert with ${app.experience} of experience.`;
-        this.curriculumInput = this.generateCurriculum(
-          app.expertise,
-          app.courseIdea,
-        ).join('\\n');
+      if (!this.newCourse.title && facultyMember.expertise) {
+        this.newCourse.tag = facultyMember.expertise.split(',')[0].trim();
+        this.newCourse.why = `Learn ${facultyMember.expertise} from an industry expert.`;
+        if (app?.courseIdea) {
+          this.curriculumInput = this.generateCurriculum(
+            facultyMember.expertise,
+            app.courseIdea,
+          ).join('\\n');
+        }
       }
     }
   }
@@ -174,6 +175,7 @@ export class AdminDashboardComponent implements OnInit {
       curriculum,
       mentor: this.newMentor,
       applicationId: this.selectedApplication?.id,
+      faculty_id: this.selectedFacultyId,
     };
 
     this.courseService.createCourse(courseData).subscribe(() => {
@@ -244,27 +246,7 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  // Helper Methods
-  prefillCourseData(app: any) {
-    this.newCourse = {
-      title: this.extractCourseTitle(app.courseIdea),
-      category: 'new',
-      tag: app.expertise.split(',')[0].trim(),
-      description: app.courseIdea,
-      why: `Learn ${app.expertise} from an industry expert with ${app.experience} of experience.`,
-      price: this.suggestPrice(app.expertise),
-      duration: this.suggestDuration(app.availability),
-      certification: true,
-      curriculum: this.generateCurriculum(app.expertise, app.courseIdea),
-    };
-    this.newMentor = {
-      name: app.name,
-      bio: app.bio,
-      avatar: `https://i.pravatar.cc/100?u=${app.email}`,
-      email: app.email,
-    };
-    this.curriculumInput = this.newCourse.curriculum.join('\\n');
-  }
+
 
   resetForm() {
     this.newCourse = {
@@ -278,6 +260,8 @@ export class AdminDashboardComponent implements OnInit {
       certification: true,
       curriculum: [] as string[],
     };
+    this.selectedFacultyEmail = '';
+    this.selectedFacultyId = null;
     this.resetMentorData();
     this.selectedApplication = null;
   }
@@ -287,34 +271,7 @@ export class AdminDashboardComponent implements OnInit {
     this.curriculumInput = '';
   }
 
-  extractCourseTitle(courseIdea: string): string {
-    const words = courseIdea.split(' ').slice(0, 4);
-    return (
-      words.join(' ') +
-      (words.length < courseIdea.split(' ').length ? ' Course' : '')
-    );
-  }
 
-  suggestPrice(expertise: string): number {
-    const prices: any = {
-      java: 4999,
-      python: 4499,
-      devops: 5999,
-      react: 3499,
-      node: 3999,
-    };
-    const key = expertise.toLowerCase().split(',')[0].trim();
-    return prices[key] || 3999;
-  }
-
-  suggestDuration(availability: string): string {
-    const durations: any = {
-      'full-time': '8 weeks',
-      'part-time': '12 weeks',
-      evenings: '16 weeks',
-    };
-    return durations[availability] || '10 weeks';
-  }
 
   generateCurriculum(expertise: string, courseIdea: string): string[] {
     const topics = expertise.split(',').map((s) => s.trim());
