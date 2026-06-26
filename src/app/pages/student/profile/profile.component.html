@@ -31,7 +31,7 @@
             <div class="stat-label">Courses Enrolled</div>
           </div>
         </div>
-        
+
         <div class="stat-card card">
           <span class="stat-icon">💰</span>
           <div class="stat-content">
@@ -39,7 +39,7 @@
             <div class="stat-label">Total Invested</div>
           </div>
         </div>
-        
+
         <div class="stat-card card">
           <span class="stat-icon">⚡</span>
           <div class="stat-content">
@@ -53,35 +53,47 @@
     <!-- Enrolled Courses Section -->
     <div class="section-block">
       <h2 class="section-title">My <span>Enrolled Courses</span></h2>
-      
-      <div class="enrolled-courses" *ngIf="enrolledCourses.length; else noCourses">
+
+      <div
+        class="enrolled-courses"
+        *ngIf="enrolledCourses.length; else noCourses"
+      >
         <div class="course-item card" *ngFor="let course of enrolledCourses">
           <div class="course-content">
             <div class="course-header">
               <span class="tag-chip">{{ course.tag }}</span>
-              <span class="badge badge-{{ course.category }}">{{ course.category }}</span>
+              <span class="badge badge-{{ course.category }}">{{
+                course.category
+              }}</span>
             </div>
             <h3 class="course-title">{{ course.title }}</h3>
             <p class="course-desc">{{ course.description }}</p>
-            
+
             <div class="course-meta">
               <span class="meta-info">⭐ {{ course.rating }}</span>
               <span class="meta-info">⏱ {{ course.duration }}</span>
-              <span class="meta-info" *ngIf="course.certification">🏆 Certificate</span>
+              <span class="meta-info" *ngIf="course.certification"
+                >🏆 Certificate</span
+              >
             </div>
-            
+
             <!-- Progress Bar -->
             <div class="progress-section">
               <div class="progress-header">
                 <span class="progress-label">Progress</span>
-                <span class="progress-percent">{{ getCompletionPercentage() }}%</span>
+                <span class="progress-percent"
+                  >{{ getCompletionPercentage() }}%</span
+                >
               </div>
               <div class="progress-bar">
-                <div class="fill" [style.width.%]="getCompletionPercentage()"></div>
+                <div
+                  class="fill"
+                  [style.width.%]="getCompletionPercentage()"
+                ></div>
               </div>
             </div>
           </div>
-          
+
           <div class="course-actions">
             <button class="btn btn-primary">Continue Learning</button>
             <button class="btn btn-outline">View Certificate</button>
@@ -93,9 +105,39 @@
         <div class="empty-state">
           <h3>📚 No courses yet</h3>
           <p>Start your learning journey by enrolling in a course</p>
-          <a routerLink="/courses" class="btn btn-primary" style="margin-top:16px">Browse Courses</a>
+          <a
+            routerLink="/courses"
+            class="btn btn-primary"
+            style="margin-top: 16px"
+            >Browse Courses</a
+          >
         </div>
       </ng-template>
+    </div>
+
+    <div class="section-block" *ngIf="upcomingSessions.length">
+      <h2 class="section-title">Upcoming <span>Live Sessions</span></h2>
+      <div class="sessions-grid">
+        <div class="session-card card" *ngFor="let session of upcomingSessions">
+          <div class="session-info">
+            <h3>{{ session.title }}</h3>
+            <p class="session-meta">
+              {{ session.course_title }} • {{ session.date }}
+              {{ session.time }} • {{ session.duration }} mins
+            </p>
+            <p>{{ session.description }}</p>
+          </div>
+          <div class="session-actions">
+            <a
+              class="btn btn-primary"
+              [href]="session.join_url"
+              target="_blank"
+            >
+              Join via Zoom
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Learning Achievements -->
@@ -109,7 +151,7 @@
             <p>Enrolled in your first course</p>
           </div>
         </div>
-        
+
         <div class="achievement-badge card" *ngIf="enrolledCourses.length >= 3">
           <span class="achievement-icon">📚</span>
           <div class="achievement-info">
@@ -117,7 +159,7 @@
             <p>Enrolled in 3+ courses</p>
           </div>
         </div>
-        
+
         <div class="achievement-badge card" *ngIf="totalSpent >= 10000">
           <span class="achievement-icon">💎</span>
           <div class="achievement-info">

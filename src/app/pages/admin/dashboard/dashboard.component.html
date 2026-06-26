@@ -8,16 +8,53 @@
     <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
 
     <div class="stats-row">
-      <div class="stat-box card"><div class="value">{{ courses.length }}</div><div class="label">Total Courses</div></div>
-      <div class="stat-box card"><div class="value">{{ faculty.length }}</div><div class="label">Faculty Members</div></div>
-      <div class="stat-box card"><div class="value">{{ applications.length }}</div><div class="label">Applications</div></div>
-      <div class="stat-box card"><div class="value">{{ applications | pendingCount }}</div><div class="label">Pending Review</div></div>
+      <div class="stat-box card">
+        <div class="value">{{ courses.length }}</div>
+        <div class="label">Total Courses</div>
+      </div>
+      <div class="stat-box card">
+        <div class="value">{{ faculty.length }}</div>
+        <div class="label">Faculty Members</div>
+      </div>
+      <div class="stat-box card">
+        <div class="value">{{ applications.length }}</div>
+        <div class="label">Applications</div>
+      </div>
+      <div class="stat-box card">
+        <div class="value">{{ applications | pendingCount }}</div>
+        <div class="label">Pending Review</div>
+      </div>
     </div>
 
     <div class="tab-bar">
-      <button class="tab" [class.active]="activeTab==='applications'" (click)="activeTab='applications'">📋 Applications</button>
-      <button class="tab" [class.active]="activeTab==='faculty'" (click)="activeTab='faculty'">👨🏫 Faculty</button>
-      <button class="tab" [class.active]="activeTab==='courses'" (click)="activeTab='courses'">📚 Courses</button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'applications'"
+        (click)="activeTab = 'applications'"
+      >
+        📋 Applications
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'pending'"
+        (click)="activeTab = 'pending'"
+      >
+        ⏳ Pending Courses
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'faculty'"
+        (click)="activeTab = 'faculty'"
+      >
+        👨🏫 Faculty
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'courses'"
+        (click)="activeTab = 'courses'"
+      >
+        📚 Courses
+      </button>
     </div>
 
     <!-- Applications Tab -->
@@ -30,21 +67,79 @@
         <div class="application-card card" *ngFor="let app of applications">
           <div class="app-header">
             <h3>{{ app.name }}</h3>
-            <span class="status-badge" [class]="app.status">{{ app.status }}</span>
+            <span class="status-badge" [class]="app.status">{{
+              app.status
+            }}</span>
           </div>
           <div class="app-details">
             <p><strong>Email:</strong> {{ app.email }}</p>
             <p><strong>Expertise:</strong> {{ app.expertise }}</p>
             <p><strong>Experience:</strong> {{ app.experience }}</p>
-            <p><strong>Course Idea:</strong> {{ app.courseIdea | slice:0:100 }}{{ app.courseIdea.length > 100 ? '...' : '' }}</p>
+            <p>
+              <strong>Course Idea:</strong> {{ app.courseIdea | slice: 0 : 100
+              }}{{ app.courseIdea.length > 100 ? "..." : "" }}
+            </p>
           </div>
           <div class="app-actions" *ngIf="app.status === 'pending'">
-            <button class="btn btn-success" (click)="approve(app.id)">✓ Approve Faculty</button>
-            <button class="btn btn-primary" (click)="createCourseFromApplication(app.id)">📚 Create Course</button>
+            <button class="btn btn-success" (click)="approve(app.id)">
+              ✓ Approve Faculty
+            </button>
+            <button
+              class="btn btn-primary"
+              (click)="createCourseFromApplication(app.id)"
+            >
+              📚 Create Course
+            </button>
           </div>
           <div class="app-actions" *ngIf="app.status === 'approved'">
-            <span style="color:var(--primary);font-size:13px;font-weight:600">✅ Approved</span>
-            <button class="btn btn-outline" (click)="createCourseFromApplication(app.id)">📚 Create Course</button>
+            <span
+              style="color: var(--primary); font-size: 13px; font-weight: 600"
+              >✅ Approved</span
+            >
+            <button
+              class="btn btn-outline"
+              (click)="createCourseFromApplication(app.id)"
+            >
+              📚 Create Course
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Courses Tab -->
+    <div *ngIf="activeTab === 'pending'">
+      <div class="empty-state" *ngIf="!pendingCourses.length">
+        <h3>No pending courses</h3>
+        <p>Courses submitted by faculty for approval will appear here.</p>
+      </div>
+      <div class="applications-grid" *ngIf="pendingCourses.length">
+        <div
+          class="application-card card"
+          *ngFor="let course of pendingCourses"
+        >
+          <div class="app-header">
+            <h3>{{ course.title }}</h3>
+            <span class="status-badge pending">{{ course.status }}</span>
+          </div>
+          <div class="app-details">
+            <p><strong>Category:</strong> {{ course.category }}</p>
+            <p>
+              <strong>Instructor:</strong> {{ course.mentor?.name || "TBD" }}
+            </p>
+            <p>
+              <strong>Description:</strong>
+              {{ course.description | slice: 0 : 140
+              }}{{ course.description.length > 140 ? "..." : "" }}
+            </p>
+          </div>
+          <div class="app-actions">
+            <button class="btn btn-success" (click)="approveCourse(course.id)">
+              Approve
+            </button>
+            <button class="btn btn-danger" (click)="rejectCourse(course.id)">
+              Reject
+            </button>
           </div>
         </div>
       </div>
@@ -61,7 +156,9 @@
           <div class="faculty-courses" *ngIf="f.courses.length">
             <p class="courses-label">Teaching:</p>
             <div class="course-chips">
-              <span class="course-chip" *ngFor="let course of f.courses">{{ course }}</span>
+              <span class="course-chip" *ngFor="let course of f.courses">{{
+                course
+              }}</span>
             </div>
           </div>
           <span class="status-badge active">Active</span>
@@ -71,19 +168,49 @@
 
     <!-- Courses Tab -->
     <div *ngIf="activeTab === 'courses'">
-      <div style="display:flex;justify-content:space-between;margin-bottom:20px;align-items:center">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+          align-items: center;
+        "
+      >
         <h2>All Courses</h2>
-        <button class="btn btn-outline" (click)="showCourseModal=true; resetForm()">+ Manual Course</button>
+        <button
+          class="btn btn-outline"
+          (click)="showCourseModal = true; resetForm()"
+        >
+          + Manual Course
+        </button>
       </div>
       <div class="card">
         <table>
-          <thead><tr><th>Course</th><th>Mentor</th><th>Category</th><th>Tag</th><th>Price</th><th>Duration</th><th>Enrolled</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Mentor</th>
+              <th>Category</th>
+              <th>Tag</th>
+              <th>Price</th>
+              <th>Duration</th>
+              <th>Enrolled</th>
+            </tr>
+          </thead>
           <tbody>
             <tr *ngFor="let c of courses">
-              <td><strong>{{ c.title }}</strong></td>
-              <td>{{ c.mentor?.name || 'TBD' }}</td>
-              <td><span class="badge badge-{{c.category}}">{{ c.category }}</span></td>
-              <td><span class="tag-chip">{{ c.tag }}</span></td>
+              <td>
+                <strong>{{ c.title }}</strong>
+              </td>
+              <td>{{ c.mentor?.name || "TBD" }}</td>
+              <td>
+                <span class="badge badge-{{ c.category }}">{{
+                  c.category
+                }}</span>
+              </td>
+              <td>
+                <span class="tag-chip">{{ c.tag }}</span>
+              </td>
               <td>₹{{ c.price | number }}</td>
               <td>{{ c.duration }}</td>
               <td>{{ c.enrolled | number }}</td>
@@ -98,14 +225,23 @@
 <!-- Course Creation Modal -->
 <div class="modal-overlay" *ngIf="showCourseModal">
   <div class="modal course-modal">
-    <h2>📚 {{ selectedApplication ? 'Create Course from Application' : 'Create New Course' }}</h2>
-    
+    <h2>
+      📚
+      {{
+        selectedApplication
+          ? "Create Course from Application"
+          : "Create New Course"
+      }}
+    </h2>
+
     <div class="application-info" *ngIf="selectedApplication">
       <div class="info-card">
         <h4>📋 Application Details</h4>
         <p><strong>Applicant:</strong> {{ selectedApplication.name }}</p>
         <p><strong>Expertise:</strong> {{ selectedApplication.expertise }}</p>
-        <p><strong>Original Idea:</strong> {{ selectedApplication.courseIdea }}</p>
+        <p>
+          <strong>Original Idea:</strong> {{ selectedApplication.courseIdea }}
+        </p>
       </div>
     </div>
 
@@ -117,11 +253,22 @@
           <div class="form-row-2">
             <div class="form-group">
               <label>Course Title</label>
-              <input type="text" [(ngModel)]="newCourse.title" name="title" placeholder="e.g., Java Masterclass" required>
+              <input
+                type="text"
+                [(ngModel)]="newCourse.title"
+                name="title"
+                placeholder="e.g., Java Masterclass"
+                required
+              />
             </div>
             <div class="form-group">
               <label>Technology Tag</label>
-              <input type="text" [(ngModel)]="newCourse.tag" name="tag" placeholder="e.g., Java, Python, DevOps">
+              <input
+                type="text"
+                [(ngModel)]="newCourse.tag"
+                name="tag"
+                placeholder="e.g., Java, Python, DevOps"
+              />
             </div>
           </div>
           <div class="form-row-2">
@@ -135,20 +282,40 @@
             </div>
             <div class="form-group">
               <label>Price (₹)</label>
-              <input type="number" [(ngModel)]="newCourse.price" name="price" placeholder="4999">
+              <input
+                type="number"
+                [(ngModel)]="newCourse.price"
+                name="price"
+                placeholder="4999"
+              />
             </div>
           </div>
           <div class="form-group">
             <label>Duration</label>
-            <input type="text" [(ngModel)]="newCourse.duration" name="duration" placeholder="e.g., 12 weeks, 3 months">
+            <input
+              type="text"
+              [(ngModel)]="newCourse.duration"
+              name="duration"
+              placeholder="e.g., 12 weeks, 3 months"
+            />
           </div>
           <div class="form-group">
             <label>Course Description</label>
-            <textarea [(ngModel)]="newCourse.description" name="description" placeholder="What will students learn in this course?" rows="3"></textarea>
+            <textarea
+              [(ngModel)]="newCourse.description"
+              name="description"
+              placeholder="What will students learn in this course?"
+              rows="3"
+            ></textarea>
           </div>
           <div class="form-group">
             <label>Why Take This Course?</label>
-            <textarea [(ngModel)]="newCourse.why" name="why" placeholder="Benefits and career advantages..." rows="3"></textarea>
+            <textarea
+              [(ngModel)]="newCourse.why"
+              name="why"
+              placeholder="Benefits and career advantages..."
+              rows="3"
+            ></textarea>
           </div>
         </div>
 
@@ -158,20 +325,40 @@
           <div class="form-row-2">
             <div class="form-group">
               <label>Mentor Name</label>
-              <input type="text" [(ngModel)]="newMentor.name" name="mentorName" placeholder="Instructor name">
+              <input
+                type="text"
+                [(ngModel)]="newMentor.name"
+                name="mentorName"
+                placeholder="Instructor name"
+              />
             </div>
             <div class="form-group">
               <label>Mentor Email</label>
-              <input type="email" [(ngModel)]="newMentor.email" name="mentorEmail" placeholder="mentor@email.com">
+              <input
+                type="email"
+                [(ngModel)]="newMentor.email"
+                name="mentorEmail"
+                placeholder="mentor@email.com"
+              />
             </div>
           </div>
           <div class="form-group">
             <label>Mentor Bio</label>
-            <textarea [(ngModel)]="newMentor.bio" name="mentorBio" placeholder="Professional background, experience, achievements..." rows="3"></textarea>
+            <textarea
+              [(ngModel)]="newMentor.bio"
+              name="mentorBio"
+              placeholder="Professional background, experience, achievements..."
+              rows="3"
+            ></textarea>
           </div>
           <div class="form-group">
             <label>Avatar URL (optional)</label>
-            <input type="url" [(ngModel)]="newMentor.avatar" name="mentorAvatar" placeholder="https://example.com/photo.jpg">
+            <input
+              type="url"
+              [(ngModel)]="newMentor.avatar"
+              name="mentorAvatar"
+              placeholder="https://example.com/photo.jpg"
+            />
           </div>
         </div>
 
@@ -180,14 +367,27 @@
           <h3>📋 Course Curriculum</h3>
           <div class="form-group">
             <label>Curriculum (one topic per line)</label>
-            <textarea [(ngModel)]="curriculumInput" name="curriculum" placeholder="Module 1: Introduction&#10;Module 2: Core Concepts&#10;Module 3: Advanced Topics&#10;..." rows="6"></textarea>
+            <textarea
+              [(ngModel)]="curriculumInput"
+              name="curriculum"
+              placeholder="Module 1: Introduction&#10;Module 2: Core Concepts&#10;Module 3: Advanced Topics&#10;..."
+              rows="6"
+            ></textarea>
           </div>
         </div>
       </div>
 
       <div class="modal-actions">
-        <button type="submit" class="btn btn-primary btn-lg">Create Course</button>
-        <button type="button" class="btn btn-outline" (click)="showCourseModal=false">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-lg">
+          Create Course
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline"
+          (click)="showCourseModal = false"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   </div>
