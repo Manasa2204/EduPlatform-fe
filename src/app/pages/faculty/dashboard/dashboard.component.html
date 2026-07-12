@@ -160,7 +160,7 @@
             </div>
             <div class="stat-item" *ngIf="course.duration">
               <span class="stat-icon">⏱️</span>
-              <span>{{ course.duration }}</span>
+              <span>{{ course.duration }} weeks</span>
             </div>
           </div>
 
@@ -175,6 +175,9 @@
           </div>
 
           <div class="course-card-footer">
+            <button class="btn btn-outline" style="margin-right: 8px;" *ngIf="course.status === 'draft' || course.status === 'pending'" (click)="editCourse(course)">
+              Edit
+            </button>
             <button class="btn btn-success" *ngIf="course.status === 'draft'" (click)="submitCourse(course)">
               Submit for Review
             </button>
@@ -227,15 +230,17 @@
           <input type="number" [(ngModel)]="newCourse.price" placeholder="₹4999" />
         </div>
         <div class="form-group">
-          <label>Duration</label>
-          <input type="text" [(ngModel)]="newCourse.duration" placeholder="8 weeks" />
+          <label>Duration (weeks)</label>
+          <input type="number" [(ngModel)]="newCourse.duration" placeholder="8" />
         </div>
       </div>
       <div class="form-group">
-        <label>Curriculum</label>
-        <textarea [(ngModel)]="newCourse.curriculum[0]" rows="4"
-          placeholder="Enter a single curriculum heading"></textarea>
-        <small>One item is enough for a draft; you can expand it later.</small>
+        <label>Curriculum Steps</label>
+        <div *ngFor="let step of newCourse.curriculum; let i = index; trackBy: trackByIndex" style="display: flex; gap: 8px; margin-bottom: 8px;">
+          <input type="text" [(ngModel)]="newCourse.curriculum[i]" placeholder="Enter curriculum step" style="flex: 1;" />
+          <button class="btn btn-outline" (click)="removeCurriculumStep(i)" *ngIf="newCourse.curriculum.length > 1" style="padding: 0 10px;">❌</button>
+        </div>
+        <button class="btn btn-outline" (click)="addCurriculumStep()" style="margin-top: 8px; padding: 4px 12px; font-size: 14px;">+ Add Step</button>
       </div>
       <div style="display: flex; gap: 12px; margin-top: 8px">
         <button class="btn btn-primary" (click)="createCourse()">
@@ -311,6 +316,65 @@
           Create & Share
         </button>
         <button class="btn btn-outline" (click)="showZoomModal = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Course Modal -->
+  <div class="modal-overlay" *ngIf="showEditCourseModal">
+    <div class="modal">
+      <h2>✏️ Edit Course</h2>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="newCourse.title" placeholder="Course title" />
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Category</label>
+          <select [(ngModel)]="newCourse.category">
+            <option value="trending">🔥 Trending</option>
+            <option value="popular">⭐ Popular</option>
+            <option value="new">🆕 New</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Technology Tag</label>
+          <input type="text" [(ngModel)]="newCourse.tag" placeholder="e.g., Java, Python, DevOps" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="newCourse.description" rows="3" placeholder="Short course summary"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Why this course?</label>
+        <textarea [(ngModel)]="newCourse.why" rows="2" placeholder="What students will gain"></textarea>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Price</label>
+          <input type="number" [(ngModel)]="newCourse.price" placeholder="₹4999" />
+        </div>
+        <div class="form-group">
+          <label>Duration (weeks)</label>
+          <input type="number" [(ngModel)]="newCourse.duration" placeholder="8" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Curriculum Steps</label>
+        <div *ngFor="let step of newCourse.curriculum; let i = index; trackBy: trackByIndex" style="display: flex; gap: 8px; margin-bottom: 8px;">
+          <input type="text" [(ngModel)]="newCourse.curriculum[i]" placeholder="Enter curriculum step" style="flex: 1;" />
+          <button class="btn btn-outline" (click)="removeCurriculumStep(i)" *ngIf="newCourse.curriculum.length > 1" style="padding: 0 10px;">❌</button>
+        </div>
+        <button class="btn btn-outline" (click)="addCurriculumStep()" style="margin-top: 8px; padding: 4px 12px; font-size: 14px;">+ Add Step</button>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 8px">
+        <button class="btn btn-primary" (click)="updateCourse()">
+          Save Changes
+        </button>
+        <button class="btn btn-outline" (click)="showEditCourseModal = false">
           Cancel
         </button>
       </div>

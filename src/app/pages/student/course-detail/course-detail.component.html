@@ -14,12 +14,15 @@
           <div class="hero-stats">
             <span>⭐ {{ course.rating }}</span>
             <span>👥 {{ course.enrolled | number }} enrolled</span>
-            <span>⏱ {{ course.duration }}</span>
+            <span>⏱ {{ course.duration }} weeks</span>
             <span *ngIf="course.certification">🏆 Certificate included</span>
           </div>
         </div>
         <div class="enroll-card card">
-          <div class="price">₹{{ course.price | number }}</div>
+          <div class="price">
+            <span *ngIf="course.display_price > 0" style="text-decoration: line-through; color: var(--text-muted); font-size: 0.7em; margin-right: 8px;">₹{{ course.display_price | number }}</span>
+            ₹{{ course.price | number }}
+          </div>
           <div
             class="alert alert-success"
             *ngIf="message"
@@ -66,7 +69,7 @@
           </a>
           <ul class="includes">
             <li>✅ Full lifetime access</li>
-            <li>✅ {{ course.duration }} of content</li>
+            <li>✅ {{ course.duration }} weeks of content</li>
             <li *ngIf="course.certification">✅ Certificate of completion</li>
             <li>✅ Access on mobile & desktop</li>
           </ul>

@@ -37,7 +37,8 @@ export class AdminDashboardComponent implements OnInit {
     description: '',
     why: '',
     price: 0,
-    duration: '',
+    display_price: 0,
+    duration: 8,
     certification: true,
     curriculum: [] as string[],
   };
@@ -201,7 +202,8 @@ export class AdminDashboardComponent implements OnInit {
       description: course.description,
       why: course.why,
       price: course.price,
-      duration: course.duration,
+      display_price: course.display_price || 0,
+      duration: course.duration || 8,
       certification: course.certification,
       curriculum: [...course.curriculum],
     };
@@ -261,7 +263,8 @@ export class AdminDashboardComponent implements OnInit {
       description: '',
       why: '',
       price: 0,
-      duration: '',
+      display_price: 0,
+      duration: 8,
       certification: true,
       curriculum: [] as string[],
     };

@@ -14,8 +14,10 @@ export class FacultyDashboardComponent implements OnInit {
   activeTab = 'students';
   showSessionModal = false;
   showCourseModal = false;
+  showEditCourseModal = false;
   showZoomModal = false;
   selectedSchedule: any = null;
+  editingCourse: any = null;
   zoomResult: string = '';
   zoom = { scheduleId: '', topic: '', startTime: '' };
   session = {
@@ -33,7 +35,7 @@ export class FacultyDashboardComponent implements OnInit {
     description: '',
     why: '',
     price: 0,
-    duration: '',
+    duration: 8,
     certification: true,
     curriculum: [''],
   };
@@ -80,11 +82,35 @@ export class FacultyDashboardComponent implements OnInit {
       description: '',
       why: '',
       price: 0,
-      duration: '',
+      duration: 8,
       certification: true,
       curriculum: [''],
     };
     this.showCourseModal = true;
+  }
+
+  editCourse(course: any) {
+    this.editingCourse = { ...course };
+    this.newCourse = {
+      title: course.title,
+      category: course.category,
+      tag: course.tag,
+      description: course.description,
+      why: course.why,
+      price: course.price,
+      duration: course.duration || 8,
+      certification: course.certification,
+      curriculum: course.curriculum && course.curriculum.length > 0 ? [...course.curriculum] : [''],
+    };
+    this.showEditCourseModal = true;
+  }
+
+  updateCourse() {
+    this.courseService.updateCourse(this.editingCourse.id, this.newCourse).subscribe(() => {
+      this.showEditCourseModal = false;
+      this.message = 'Course updated successfully.';
+      this.loadCourses();
+    });
   }
 
   createCourse() {
@@ -123,5 +149,17 @@ export class FacultyDashboardComponent implements OnInit {
       if (sch) sch.zoomLink = res.zoomLink;
       this.showZoomModal = false;
     });
+  }
+
+  addCurriculumStep() {
+    this.newCourse.curriculum.push('');
+  }
+
+  removeCurriculumStep(index: number) {
+    this.newCourse.curriculum.splice(index, 1);
+  }
+
+  trackByIndex(index: number, obj: any): any {
+    return index;
   }
 }
