@@ -42,7 +42,7 @@ export class FacultyDashboardComponent implements OnInit {
   constructor(
     private facultyService: FacultyService,
     private courseService: CourseService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.facultyService.getStudents().subscribe((d) => (this.students = d));

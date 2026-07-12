@@ -11,7 +11,9 @@ import { FacultyDashboardComponent } from './pages/faculty/dashboard/dashboard.c
 import { HireTalentLandingComponent } from './pages/hire-talent/landing/landing.component';
 import { HireTalentApplyComponent } from './pages/hire-talent/apply/apply.component';
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
+import { InstructorProfileComponent } from './pages/student/instructor-profile/instructor-profile.component';
 import { ProfileComponent } from './pages/student/profile/profile.component';
+import { FacultyProfileComponent } from './pages/faculty/profile/profile.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -21,12 +23,14 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'courses', component: CoursesComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'courses/:id', component: CourseDetailComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
+  { path: 'faculty-profile/:id', component: InstructorProfileComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'payment', component: PaymentComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'faculty', component: FacultyDashboardComponent, canActivate: [AuthGuard], data: { roles: ['faculty'] } },
-  { path: 'hire-talent', component: HireTalentLandingComponent },
-  { path: 'hire-talent/apply', component: HireTalentApplyComponent },
+  { path: 'faculty/profile', component: FacultyProfileComponent, canActivate: [AuthGuard], data: { roles: ['faculty'] } },
+  { path: 'hire-tech-gurus', component: HireTalentLandingComponent },
+  { path: 'hire-tech-gurus/apply', component: HireTalentApplyComponent },
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
   { path: '**', redirectTo: 'login' },
 ];
@@ -35,4 +39,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

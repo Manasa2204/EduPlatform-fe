@@ -18,6 +18,7 @@ export class AdminDashboardComponent implements OnInit {
   showCourseModal = false;
   showEditCourseModal = false;
   showFacultyModal = false;
+  showCourseDetailsModal = false;
 
   // Form data
   selectedApplication: any = null;
@@ -107,6 +108,11 @@ export class AdminDashboardComponent implements OnInit {
     this.showFacultyModal = true;
   }
 
+  viewCourseDetails(course: any) {
+    this.selectedCourse = course;
+    this.showCourseDetailsModal = true;
+  }
+
 
 
   // Manual Course Creation
@@ -143,7 +149,7 @@ export class AdminDashboardComponent implements OnInit {
     if (facultyMember) {
       this.selectedFacultyId = facultyMember.id;
       const app = facultyMember.applications?.[0];
-      
+
       this.newMentor = {
         name: facultyMember.name,
         email: facultyMember.email,
@@ -200,7 +206,6 @@ export class AdminDashboardComponent implements OnInit {
       curriculum: [...course.curriculum],
     };
     this.newMentor = { ...course.mentor };
-    this.curriculumInput = course.curriculum.join('\\n');
     this.showEditCourseModal = true;
   }
 

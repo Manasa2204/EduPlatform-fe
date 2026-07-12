@@ -100,6 +100,9 @@
             </p>
           </div>
           <div class="app-actions">
+            <button class="btn btn-outline" (click)="viewCourseDetails(course)">
+              👁️ View Details
+            </button>
             <button class="btn btn-success" (click)="approveCourse(course.id)">
               Approve
             </button>
@@ -245,6 +248,7 @@
             <label>Course Description</label>
             <textarea [(ngModel)]="newCourse.description" name="description"
               placeholder="What will students learn in this course?" rows="3"></textarea>
+
           </div>
           <div class="form-group">
             <label>Why Take This Course?</label>
@@ -256,10 +260,14 @@
         <!-- Mentor Information -->
         <div class="form-section">
           <h3>👨🏫 Mentor Information</h3>
-          
-          <div class="form-group" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+
+          <div class="form-group"
+            style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
             <label>Select Faculty Member</label>
-            <select class="form-control" [(ngModel)]="selectedFacultyEmail" name="facultySelect" (change)="onFacultySelect($event)" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface);" required>
+            <select class="form-control" [(ngModel)]="selectedFacultyEmail" name="facultySelect"
+              (change)="onFacultySelect($event)"
+              style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface);"
+              required>
               <option value="" disabled selected>-- Select Faculty --</option>
               <option *ngFor="let f of faculty" [value]="f.email">{{ f.name }} ({{ f.expertise }})</option>
             </select>
@@ -268,11 +276,13 @@
           <div class="form-row-2">
             <div class="form-group">
               <label>Mentor Name</label>
-              <input type="text" [(ngModel)]="newMentor.name" name="mentorName" placeholder="Instructor name" readonly />
+              <input type="text" [(ngModel)]="newMentor.name" name="mentorName" placeholder="Instructor name"
+                readonly />
             </div>
             <div class="form-group">
               <label>Mentor Email</label>
-              <input type="email" [(ngModel)]="newMentor.email" name="mentorEmail" placeholder="mentor@email.com" readonly />
+              <input type="email" [(ngModel)]="newMentor.email" name="mentorEmail" placeholder="mentor@email.com"
+                readonly />
             </div>
           </div>
           <div class="form-group">
@@ -350,6 +360,86 @@
       <button type="button" class="btn btn-primary" (click)="approvedCredentials = null">
         Done
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Course Details Modal -->
+<div class="modal-overlay" *ngIf="showCourseDetailsModal">
+  <div class="modal course-modal" *ngIf="selectedCourse">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+      <h2 style="margin: 0; font-size: 24px;">{{ selectedCourse.title }}</h2>
+      <button class="btn"
+        style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);"
+        (click)="showCourseDetailsModal = false">×</button>
+    </div>
+
+    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+      <div class="card" style="margin: 0;">
+        <h4
+          style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+          Basic Info</h4>
+        <p><strong>Category:</strong> <span class="badge badge-{{ selectedCourse.category }}">{{ selectedCourse.category
+            }}</span></p>
+        <p><strong>Tag:</strong> <span class="tag-chip">{{ selectedCourse.tag }}</span></p>
+        <p><strong>Price:</strong> ₹{{ selectedCourse.price | number }}</p>
+        <p><strong>Duration:</strong> {{ selectedCourse.duration }}</p>
+        <p><strong>Certification:</strong> {{ selectedCourse.certification ? 'Yes' : 'No' }}</p>
+      </div>
+
+      <div class="card" style="margin: 0;">
+        <h4
+          style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+          Mentor Details</h4>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <img [src]="selectedCourse.mentor?.avatar" alt="Avatar"
+            style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;"
+            *ngIf="selectedCourse.mentor?.avatar">
+          <div *ngIf="!selectedCourse.mentor?.avatar"
+            style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">
+            {{ selectedCourse.mentor?.name?.[0] || '?' }}
+          </div>
+          <div>
+            <p style="margin: 0; font-weight: 600;">{{ selectedCourse.mentor?.name || 'TBD' }}</p>
+            <p style="margin: 0; font-size: 14px; color: var(--text-muted);">{{ selectedCourse.mentor?.email || '' }}
+            </p>
+          </div>
+        </div>
+        <p style="font-size: 14px;">{{ selectedCourse.mentor?.bio }}</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <h4
+        style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+        Description</h4>
+      <p style="white-space: pre-wrap;">{{ selectedCourse.description }}</p>
+
+      <h4
+        style="margin-top: 24px; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+        Why Take This Course?</h4>
+      <p style="white-space: pre-wrap;">{{ selectedCourse.why }}</p>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <h4
+        style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+        Curriculum</h4>
+      <ul style="padding-left: 20px; margin: 0;">
+        <li *ngFor="let module of selectedCourse.curriculum" style="margin-bottom: 8px;">{{ module }}</li>
+      </ul>
+      <p *ngIf="!selectedCourse.curriculum?.length" style="color: var(--text-muted); font-style: italic;">No curriculum
+        provided.</p>
+    </div>
+
+    <div
+      style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--border);">
+      <button class="btn btn-outline" (click)="showCourseDetailsModal = false">Close</button>
+      <button class="btn btn-success" (click)="approveCourse(selectedCourse.id); showCourseDetailsModal = false"
+        *ngIf="selectedCourse.status === 'pending'">Approve</button>
+      <button class="btn btn-danger" (click)="rejectCourse(selectedCourse.id); showCourseDetailsModal = false"
+        *ngIf="selectedCourse.status === 'pending'">Reject</button>
     </div>
   </div>
 </div>

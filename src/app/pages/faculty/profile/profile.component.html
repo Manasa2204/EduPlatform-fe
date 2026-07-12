@@ -1,0 +1,45 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">Faculty Profile</h2>
+
+  <div *ngIf="successMessage" class="mb-4 p-4 text-green-700 bg-green-100 rounded-lg">
+    {{ successMessage }}
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Name</label>
+      <input type="text" formControlName="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Expertise</label>
+      <input type="text" formControlName="expertise" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Bio</label>
+      <textarea formControlName="bio" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"></textarea>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">LinkedIn Profile</label>
+      <input type="url" formControlName="linkedin" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Experience</label>
+      <textarea formControlName="experience" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"></textarea>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Phone (Private)</label>
+      <input type="tel" formControlName="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+    </div>
+
+    <div>
+      <button type="submit" [disabled]="!profileForm.valid" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        Save Profile
+      </button>
+    </div>
+  </form>
+</div>

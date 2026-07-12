@@ -1,7 +1,7 @@
 <nav class="navbar">
   <div class="nav-brand" routerLink="/">
-    <span class="logo-icon">🎓</span>
-    <span class="logo-text">EduPlatform</span>
+    <img src="assets/logo.png" alt="EduPlatform Logo" class="logo-image" style="height: 50px; margin-right: 10px;">
+
   </div>
 
   <div class="nav-links" *ngIf="auth.isLoggedIn()">
@@ -10,10 +10,11 @@
         <a routerLink="/courses" routerLinkActive="active">Courses</a>
         <a routerLink="/profile" routerLinkActive="active">Profile</a>
         <a routerLink="/cart" routerLinkActive="active">🛒 Cart</a>
-        <a routerLink="/hire-talent" routerLinkActive="active">Teach With Us</a>
+        <a routerLink="/hire-tech-gurus" routerLinkActive="active">Teach With Us</a>
       </ng-container>
       <ng-container *ngSwitchCase="'faculty'">
         <a routerLink="/faculty" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/faculty/profile" routerLinkActive="active">Profile</a>
       </ng-container>
       <ng-container *ngSwitchCase="'admin'">
         <a routerLink="/admin" routerLinkActive="active">Admin Panel</a>
@@ -33,7 +34,8 @@
     <ng-template #guestNav>
       <a routerLink="/login" class="btn btn-outline">Login</a>
       <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
-      <a routerLink="/hire-talent" class="btn" style="background:rgba(255,101,132,0.15);color:#FF6584;">Teach With Us</a>
+      <a routerLink="/hire-tech-gurus" class="btn" style="background:rgba(255,101,132,0.15);color:#FF6584;">Teach With
+        Us</a>
     </ng-template>
   </div>
 </nav>

@@ -1,0 +1,40 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
+  <div *ngIf="loading" class="text-center py-10">
+    <p class="text-gray-500">Loading profile...</p>
+  </div>
+
+  <div *ngIf="error" class="text-center py-10">
+    <p class="text-red-500">{{ error }}</p>
+    <a routerLink="/courses" class="text-indigo-600 hover:underline mt-4 inline-block">Back to Courses</a>
+  </div>
+
+  <div *ngIf="!loading && !error && faculty">
+    <div class="flex items-center mb-6">
+      <img [src]="'https://i.pravatar.cc/150?u=' + faculty.name" alt="Profile" class="w-24 h-24 rounded-full mr-6 border-4 border-indigo-100">
+      <div>
+        <h2 class="text-3xl font-bold text-gray-800">{{ faculty.name }}</h2>
+        <p class="text-xl text-gray-600">{{ faculty.expertise }}</p>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">About Me</h3>
+        <p class="text-gray-600 whitespace-pre-line">{{ faculty.bio || 'No bio provided.' }}</p>
+      </div>
+
+      <div *ngIf="faculty.experience">
+        <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">Experience</h3>
+        <p class="text-gray-600 whitespace-pre-line">{{ faculty.experience }}</p>
+      </div>
+
+      <div *ngIf="faculty.linkedin">
+        <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">Links</h3>
+        <a [href]="faculty.linkedin" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          LinkedIn Profile
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

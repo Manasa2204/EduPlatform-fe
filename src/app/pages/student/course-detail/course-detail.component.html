@@ -105,7 +105,12 @@
           class="mentor-avatar"
         />
         <div>
-          <h3>{{ course.mentor.name }}</h3>
+          <h3>
+            <a *ngIf="course.faculty_id" [routerLink]="['/faculty-profile', course.faculty_id]" class="text-indigo-600 hover:underline">
+              {{ course.mentor.name }}
+            </a>
+            <span *ngIf="!course.faculty_id">{{ course.mentor.name }}</span>
+          </h3>
           <p>{{ course.mentor.bio }}</p>
         </div>
       </div>

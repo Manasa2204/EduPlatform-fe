@@ -19,12 +19,14 @@ import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.compo
 import { ZoomCountPipe } from './pipes/zoom-count.pipe';
 import { PendingCountPipe } from './pipes/pending-count.pipe';
 import { ProfileComponent } from './pages/student/profile/profile.component';
+import { FacultyProfileComponent } from './pages/faculty/profile/profile.component';
+import { InstructorProfileComponent } from './pages/student/instructor-profile/instructor-profile.component';
 
 @NgModule({
   declarations: [
     AppComponent, NavbarComponent, LoginComponent, SignupComponent, HomeComponent,
     CoursesComponent, CourseDetailComponent, CartComponent, PaymentComponent,
-    FacultyDashboardComponent, HireTalentLandingComponent, HireTalentApplyComponent, AdminDashboardComponent, ZoomCountPipe, PendingCountPipe, ProfileComponent,
+    FacultyDashboardComponent, HireTalentLandingComponent, HireTalentApplyComponent, AdminDashboardComponent, ZoomCountPipe, PendingCountPipe, ProfileComponent, FacultyProfileComponent, InstructorProfileComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule],
   bootstrap: [AppComponent]
