@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'courses', component: CoursesComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'courses/:id', component: CourseDetailComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
-  { path: 'faculty-profile/:id', component: InstructorProfileComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
+  { path: 'faculty-profile/:id', component: InstructorProfileComponent, canActivate: [AuthGuard], data: { roles: ['student', 'admin'] } },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },
   { path: 'payment', component: PaymentComponent, canActivate: [AuthGuard], data: { roles: ['student'] } },

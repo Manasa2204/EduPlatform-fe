@@ -15,7 +15,7 @@
             <span class="duration">⏱ {{ item.duration }}</span>
           </div>
           <div class="item-actions">
-            <span class="price">₹{{ item.price | number }}</span>
+            <span class="price">₹{{ (item.display_price > 0 ? item.display_price : item.price) | number }}</span>
             <button class="btn btn-danger" (click)="remove(item.id)">Remove</button>
           </div>
         </div>
@@ -25,7 +25,7 @@
         <h2>Order Summary</h2>
         <div class="summary-row" *ngFor="let item of cartItems">
           <span>{{ item.title }}</span>
-          <span>₹{{ item.price | number }}</span>
+          <span>₹{{ (item.display_price > 0 ? item.display_price : item.price) | number }}</span>
         </div>
         <div class="divider"></div>
         <div class="summary-total">

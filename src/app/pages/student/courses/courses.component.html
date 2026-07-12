@@ -27,7 +27,7 @@
           <span class="duration">⏱ {{ course.duration }}</span>
         </div>
         <div class="course-footer">
-          <span class="price">₹{{ course.price | number }}</span>
+          <span class="price">₹{{ (course.display_price > 0 ? course.display_price : course.price) | number }}</span>
           <span class="cert" *ngIf="course.certification">🏆 Certificate</span>
         </div>
         <button class="btn btn-primary btn-sm">View Course →</button>

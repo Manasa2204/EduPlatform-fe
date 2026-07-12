@@ -207,18 +207,16 @@ export class AdminDashboardComponent implements OnInit {
       certification: course.certification,
       curriculum: [...course.curriculum],
     };
-    this.newMentor = { ...course.mentor };
+    this.curriculumInput = course.curriculum ? course.curriculum.join('\\n') : '';
     this.showEditCourseModal = true;
   }
 
   updateCourse() {
-    const curriculum = this.curriculumInput
-      .split('\\n')
-      .filter((item) => item.trim());
     const courseData = {
       ...this.newCourse,
-      curriculum,
+      curriculum: this.newCourse.curriculum,
       mentor: this.newMentor,
+      status: this.editingCourse.status
     };
 
     this.courseService
@@ -228,6 +226,18 @@ export class AdminDashboardComponent implements OnInit {
         this.loadAll();
         this.showSuccess('Course updated successfully!');
       });
+  }
+
+  addCurriculumStep() {
+    this.newCourse.curriculum.push('');
+  }
+
+  removeCurriculumStep(index: number) {
+    this.newCourse.curriculum.splice(index, 1);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   deleteCourse(id: string, title: string) {

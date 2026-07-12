@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
   loadEnrolledCourses() {
     this.courseService.getEnrolled().subscribe((courses) => {
       this.enrolledCourses = courses;
-      this.totalSpent = courses.reduce((sum, c) => sum + c.price, 0);
+      this.totalSpent = courses.reduce((sum, c) => sum + (c.display_price > 0 ? c.display_price : c.price), 0);
       this.loadUpcomingSessions();
     });
   }

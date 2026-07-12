@@ -8,7 +8,7 @@
         <div class="hero-left">
           <span class="badge badge-{{ course.category }}">{{
             course.category
-          }}</span>
+            }}</span>
           <h1>{{ course.title }}</h1>
           <p class="hero-desc">{{ course.description }}</p>
           <div class="hero-stats">
@@ -20,51 +20,32 @@
         </div>
         <div class="enroll-card card">
           <div class="price">
-            <span *ngIf="course.display_price > 0" style="text-decoration: line-through; color: var(--text-muted); font-size: 0.7em; margin-right: 8px;">₹{{ course.display_price | number }}</span>
-            ₹{{ course.price | number }}
+            ₹{{ (course.display_price > 0 ? course.display_price : course.price) | number }}
           </div>
-          <div
-            class="alert alert-success"
-            *ngIf="message"
-            style="margin-bottom: 12px"
-          >
+          <div class="alert alert-success" *ngIf="message" style="margin-bottom: 12px">
             {{ message }}
           </div>
-          <button
-            class="btn btn-primary btn-lg full-width"
-            (click)="addToCart()"
-            [disabled]="added || enrolled"
-          >
+          <button class="btn btn-primary btn-lg full-width" (click)="addToCart()" [disabled]="added || enrolled">
             {{
-              enrolled
-                ? "✓ Enrolled"
-                : added
-                  ? "✓ Added to Cart"
-                  : "🛒 Add to Cart"
+            enrolled
+            ? "✓ Enrolled"
+            : added
+            ? "✓ Added to Cart"
+            : "🛒 Add to Cart"
             }}
           </button>
-          <button
-            class="btn btn-success btn-lg full-width"
-            style="
+          <button class="btn btn-success btn-lg full-width" style="
               margin-top: 10px;
               text-align: center;
               justify-content: center;
-            "
-            (click)="enrollNow()"
-            *ngIf="!enrolled"
-          >
+            " (click)="enrollNow()" *ngIf="!enrolled">
             Enroll Now
           </button>
-          <a
-            routerLink="/cart"
-            class="btn btn-outline btn-lg full-width"
-            style="
+          <a routerLink="/cart" class="btn btn-outline btn-lg full-width" style="
               margin-top: 10px;
               text-align: center;
               justify-content: center;
-            "
-            *ngIf="added && !enrolled"
-          >
+            " *ngIf="added && !enrolled">
             Proceed to Cart →
           </a>
           <ul class="includes">
@@ -89,10 +70,7 @@
     <div class="section-block">
       <h2 class="section-title"><span>Course Curriculum</span></h2>
       <div class="curriculum-list">
-        <div
-          class="curriculum-item"
-          *ngFor="let item of course.curriculum; let i = index"
-        >
+        <div class="curriculum-item" *ngFor="let item of course.curriculum; let i = index">
           <span class="num">{{ i + 1 }}</span>
           <span>{{ item }}</span>
         </div>
@@ -102,19 +80,19 @@
     <div class="section-block">
       <h2 class="section-title">Meet Your <span>Mentor</span></h2>
       <div class="mentor-card card">
-        <img
-          [src]="course.mentor.avatar"
-          [alt]="course.mentor.name"
-          class="mentor-avatar"
-        />
+        <img *ngIf="course.faculty_email" [src]="'https://i.pravatar.cc/100?u=' + course.faculty_email" [alt]="course.faculty_name" class="mentor-avatar" />
+        <div *ngIf="!course.faculty_email" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #3a3285); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          {{ course.faculty_name?.[0] || '?' }}
+        </div>
         <div>
           <h3>
-            <a *ngIf="course.faculty_id" [routerLink]="['/faculty-profile', course.faculty_id]" class="text-indigo-600 hover:underline">
-              {{ course.mentor.name }}
+            <a *ngIf="course.faculty_id" [routerLink]="['/faculty-profile', course.faculty_id]"
+              class="text-indigo-600 hover:underline">
+              {{ course.faculty_name || 'TBD' }}
             </a>
-            <span *ngIf="!course.faculty_id">{{ course.mentor.name }}</span>
+            <span *ngIf="!course.faculty_id">{{ course.faculty_name || 'TBD' }}</span>
           </h3>
-          <p>{{ course.mentor.bio }}</p>
+          <p>{{ course.faculty_bio || 'No bio available.' }}</p>
         </div>
       </div>
     </div>

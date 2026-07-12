@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 @Component({ selector: 'app-cart', templateUrl: './cart.component.html', styleUrls: ['./cart.component.scss'] })
 export class CartComponent implements OnInit {
   cartItems: any[] = [];
-  get total() { return this.cartItems.reduce((s, c) => s + c.price, 0); }
+  get total() { return this.cartItems.reduce((s, c) => s + (c.display_price > 0 ? c.display_price : c.price), 0); }
 
   constructor(private courseService: CourseService, private router: Router) {}
 

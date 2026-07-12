@@ -91,7 +91,12 @@
           <div class="app-details">
             <p><strong>Category:</strong> {{ course.category }}</p>
             <p>
-              <strong>Instructor:</strong> {{ course.mentor?.name || "TBD" }}
+              <strong>Instructor:</strong>
+              <a *ngIf="course.faculty_id" [routerLink]="['/faculty-profile', course.faculty_id]"
+                style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                {{ course.faculty_name || "TBD" }}
+              </a>
+              <span *ngIf="!course.faculty_id">TBD</span>
             </p>
             <p>
               <strong>Description:</strong>
@@ -100,8 +105,8 @@
             </p>
           </div>
           <div class="app-actions">
-            <button class="btn btn-outline" (click)="viewCourseDetails(course)">
-              👁️ View Details
+            <button class="btn btn-outline" (click)="editCourse(course)">
+              ✏️ Edit
             </button>
             <button class="btn btn-success" (click)="approveCourse(course.id)">
               Approve
@@ -121,7 +126,6 @@
           <div class="faculty-avatar">{{ f.name[0] }}</div>
           <h3>{{ f.name }}</h3>
           <p>{{ f.email }}</p>
-          <span class="tag-chip">{{ f.expertise }}</span>
           <div class="faculty-courses" *ngIf="f.courses?.length">
             <p class="courses-label">Teaching:</p>
             <div class="course-chips">
@@ -144,9 +148,6 @@
           align-items: center;
         ">
         <h2>All Courses</h2>
-        <button class="btn btn-outline" (click)="showCourseModal = true; resetForm()">
-          + Manual Course
-        </button>
       </div>
       <div class="card">
         <table>
@@ -167,7 +168,13 @@
               <td>
                 <strong>{{ c.title }}</strong>
               </td>
-              <td>{{ c.mentor?.name || "TBD" }}</td>
+              <td>
+                <a *ngIf="c.faculty_id" [routerLink]="['/faculty-profile', c.faculty_id]"
+                  style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                  {{ c.faculty_name || "TBD" }}
+                </a>
+                <span *ngIf="!c.faculty_id">TBD</span>
+              </td>
               <td>
                 <span class="badge badge-{{ c.category }}">{{
                   c.category
@@ -177,13 +184,16 @@
                 <span class="tag-chip">{{ c.tag }}</span>
               </td>
               <td>
-                <span *ngIf="c.display_price > 0" style="text-decoration: line-through; color: var(--text-muted); margin-right: 4px;">₹{{ c.display_price | number }}</span>
-                ₹{{ c.price | number }}
+                <!-- <span *ngIf="c.display_price > 0"
+                  style="text-decoration: line-through; color: var(--text-muted); margin-right: 4px;">₹{{
+                  c.display_price | number }}</span> -->
+                ₹{{ c.display_price | number }}
               </td>
               <td>{{ c.duration }} weeks</td>
               <td>{{ c.enrolled | number }}</td>
               <td>
-                <button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;" (click)="editCourse(c)">Edit</button>
+                <button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;"
+                  (click)="editCourse(c)">Edit</button>
               </td>
             </tr>
           </tbody>
@@ -282,29 +292,6 @@
               <option *ngFor="let f of faculty" [value]="f.email">{{ f.name }} ({{ f.expertise }})</option>
             </select>
           </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label>Mentor Name</label>
-              <input type="text" [(ngModel)]="newMentor.name" name="mentorName" placeholder="Instructor name"
-                readonly />
-            </div>
-            <div class="form-group">
-              <label>Mentor Email</label>
-              <input type="email" [(ngModel)]="newMentor.email" name="mentorEmail" placeholder="mentor@email.com"
-                readonly />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Mentor Bio</label>
-            <textarea [(ngModel)]="newMentor.bio" name="mentorBio"
-              placeholder="Professional background, experience, achievements..." rows="3" readonly></textarea>
-          </div>
-          <div class="form-group">
-            <label>Avatar URL (optional)</label>
-            <input type="url" [(ngModel)]="newMentor.avatar" name="mentorAvatar"
-              placeholder="https://example.com/photo.jpg" readonly />
-          </div>
         </div>
 
         <!-- Curriculum -->
@@ -378,74 +365,115 @@
 <div class="modal-overlay" *ngIf="showCourseDetailsModal">
   <div class="modal course-modal" *ngIf="selectedCourse">
     <div
-      style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-      <h2 style="margin: 0; font-size: 24px;">{{ selectedCourse.title }}</h2>
+      style="background: linear-gradient(135deg, var(--primary) 0%, #3a3285 100%); padding: 30px; margin: -32px -32px 24px -32px; border-radius: 12px 12px 0 0; color: white; position: relative; overflow: hidden;">
+      <div style="position: relative; z-index: 1;">
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <span class="badge badge-{{ selectedCourse.category }}"
+            style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">{{
+            selectedCourse.category }}</span>
+          <span class="tag-chip" style="background: rgba(255,255,255,0.1); color: white; border: none;">{{
+            selectedCourse.tag }}</span>
+        </div>
+        <h2 style="margin: 0 0 8px 0; font-size: 28px; line-height: 1.2;">{{ selectedCourse.title }}</h2>
+        <div style="font-size: 14px; opacity: 0.9; display: flex; gap: 16px; align-items: center;">
+          <span>💰 ₹{{ selectedCourse.price | number }}</span>
+          <span>⏱️ {{ selectedCourse.duration }} weeks</span>
+          <span *ngIf="selectedCourse.certification">🎓 Certification Included</span>
+        </div>
+      </div>
       <button class="btn"
-        style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);"
-        (click)="showCourseDetailsModal = false">×</button>
+        style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.2); border: none; width: 36px; height: 36px; border-radius: 50%; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; transition: background 0.2s;"
+        onmouseover="this.style.background='rgba(0,0,0,0.4)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'"
+        (click)="showCourseDetailsModal = false">✕</button>
     </div>
 
-    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
-      <div class="card" style="margin: 0;">
-        <h4
-          style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-          Basic Info</h4>
-        <p><strong>Category:</strong> <span class="badge badge-{{ selectedCourse.category }}">{{ selectedCourse.category
-            }}</span></p>
-        <p><strong>Tag:</strong> <span class="tag-chip">{{ selectedCourse.tag }}</span></p>
-        <p><strong>Price:</strong> ₹{{ selectedCourse.price | number }}</p>
-        <p><strong>Duration:</strong> {{ selectedCourse.duration }}</p>
-        <p><strong>Certification:</strong> {{ selectedCourse.certification ? 'Yes' : 'No' }}</p>
+    <div class="grid-2" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+
+      <!-- Left Column: Details & Curriculum -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="card" style="margin: 0; border-top: 4px solid var(--primary);">
+          <h4
+            style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 16px;">📝</span> About This Course
+          </h4>
+          <p style="white-space: pre-wrap; line-height: 1.6; color: var(--text);">{{ selectedCourse.description }}</p>
+
+          <h4
+            style="margin-top: 24px; color: var(--text-muted); text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 16px;">🎯</span> Why Take This Course?
+          </h4>
+          <p style="white-space: pre-wrap; line-height: 1.6; color: var(--text);">{{ selectedCourse.why }}</p>
+        </div>
+
+        <div class="card" style="margin: 0; border-top: 4px solid #4CAF50;">
+          <h4
+            style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+            <span style="font-size: 16px;">📚</span> Course Curriculum
+          </h4>
+
+          <div *ngIf="selectedCourse.curriculum?.length" style="display: flex; flex-direction: column; gap: 12px;">
+            <div *ngFor="let module of selectedCourse.curriculum; let i = index"
+              style="background: var(--surface); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px;">
+              <div
+                style="background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0;">
+                {{ i + 1 }}
+              </div>
+              <div style="font-size: 15px; color: var(--text); padding-top: 4px; line-height: 1.4;">
+                {{ module }}
+              </div>
+            </div>
+          </div>
+          <p *ngIf="!selectedCourse.curriculum?.length"
+            style="color: var(--text-muted); font-style: italic; background: var(--surface); padding: 16px; border-radius: 8px; text-align: center;">
+            No curriculum provided.
+          </p>
+        </div>
       </div>
 
-      <div class="card" style="margin: 0;">
-        <h4
-          style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-          Mentor Details</h4>
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-          <img [src]="selectedCourse.mentor?.avatar" alt="Avatar"
-            style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;"
-            *ngIf="selectedCourse.mentor?.avatar">
-          <div *ngIf="!selectedCourse.mentor?.avatar"
-            style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">
-            {{ selectedCourse.mentor?.name?.[0] || '?' }}
-          </div>
-          <div>
-            <p style="margin: 0; font-weight: 600;">{{ selectedCourse.mentor?.name || 'TBD' }}</p>
-            <p style="margin: 0; font-size: 14px; color: var(--text-muted);">{{ selectedCourse.mentor?.email || '' }}
+      <!-- Right Column: Mentor -->
+      <div>
+        <div class="card" style="margin: 0; position: sticky; top: 24px; border-top: 4px solid #FF9800;">
+          <h4
+            style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+            <span style="font-size: 16px;">👨‍🏫</span> Instructor
+          </h4>
+
+          <div
+            style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
+            <img [src]="'https://i.pravatar.cc/100?u=' + selectedCourse.faculty_email" alt="Avatar"
+              style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 3px solid var(--surface); box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+              *ngIf="selectedCourse.faculty_email">
+            <div *ngIf="!selectedCourse.faculty_email"
+              style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #3a3285); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              {{ selectedCourse.faculty_name?.[0] || '?' }}
+            </div>
+
+            <h3 style="margin: 0 0 4px 0; font-size: 18px;">
+              <a *ngIf="selectedCourse.faculty_id" [routerLink]="['/faculty-profile', selectedCourse.faculty_id]"
+                style="color: inherit; text-decoration: none;">
+                {{ selectedCourse.faculty_name || 'TBD' }}
+              </a>
+              <span *ngIf="!selectedCourse.faculty_id">{{ selectedCourse.faculty_name || 'TBD' }}</span>
+            </h3>
+            <p *ngIf="selectedCourse.faculty_email"
+              style="margin: 0; font-size: 13px; color: var(--text-muted); background: var(--surface); padding: 4px 12px; border-radius: 12px;">
+              {{ selectedCourse.faculty_email }}
             </p>
           </div>
+
+          <div
+            style="background: var(--surface); padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.5; color: var(--text); border-left: 3px solid var(--primary);">
+            {{ selectedCourse.faculty_bio || 'No bio provided for this instructor.' }}
+          </div>
         </div>
-        <p style="font-size: 14px;">{{ selectedCourse.mentor?.bio }}</p>
       </div>
-    </div>
-
-    <div class="card" style="margin-bottom: 24px;">
-      <h4
-        style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-        Description</h4>
-      <p style="white-space: pre-wrap;">{{ selectedCourse.description }}</p>
-
-      <h4
-        style="margin-top: 24px; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-        Why Take This Course?</h4>
-      <p style="white-space: pre-wrap;">{{ selectedCourse.why }}</p>
-    </div>
-
-    <div class="card" style="margin-bottom: 24px;">
-      <h4
-        style="margin-top: 0; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-        Curriculum</h4>
-      <ul style="padding-left: 20px; margin: 0;">
-        <li *ngFor="let module of selectedCourse.curriculum" style="margin-bottom: 8px;">{{ module }}</li>
-      </ul>
-      <p *ngIf="!selectedCourse.curriculum?.length" style="color: var(--text-muted); font-style: italic;">No curriculum
-        provided.</p>
     </div>
 
     <div
       style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--border);">
       <button class="btn btn-outline" (click)="showCourseDetailsModal = false">Close</button>
+      <button class="btn btn-outline" (click)="editCourse(selectedCourse); showCourseDetailsModal = false">✏️
+        Edit</button>
       <button class="btn btn-success" (click)="approveCourse(selectedCourse.id); showCourseDetailsModal = false"
         *ngIf="selectedCourse.status === 'PENDING_APPROVAL'">Approve</button>
       <button class="btn btn-danger" (click)="rejectCourse(selectedCourse.id); showCourseDetailsModal = false"
@@ -456,74 +484,89 @@
 
 <!-- Edit Course Modal -->
 <div class="modal-overlay" *ngIf="showEditCourseModal">
-  <div class="modal course-modal">
+  <div class="modal">
     <h2>✏️ Edit Course</h2>
-    <form (ngSubmit)="updateCourse()">
-      <div class="form-sections">
-        <div class="form-section">
-          <h3>📖 Course Information</h3>
-          <div class="form-row-2">
-            <div class="form-group">
-              <label>Course Title</label>
-              <input type="text" [(ngModel)]="newCourse.title" name="title" required />
-            </div>
-            <div class="form-group">
-              <label>Technology Tag</label>
-              <input type="text" [(ngModel)]="newCourse.tag" name="tag" />
-            </div>
-          </div>
-          <div class="form-row-2">
-            <div class="form-group">
-              <label>Category</label>
-              <select [(ngModel)]="newCourse.category" name="category">
-                <option value="trending">🔥 Trending</option>
-                <option value="popular">⭐ Popular</option>
-                <option value="new">🆕 New</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Status</label>
-              <select [(ngModel)]="editingCourse.status" name="status">
-                <option value="DRAFT">Draft</option>
-                <option value="PENDING_APPROVAL">Pending Approval</option>
-                <option value="PUBLISHED">Published</option>
-                <option value="REJECTED">Rejected</option>
-                <option value="ARCHIVED">Archived</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row-2">
-            <div class="form-group">
-              <label>Price (₹)</label>
-              <input type="number" [(ngModel)]="newCourse.price" name="price" />
-            </div>
-            <div class="form-group">
-              <label>Display Price/MSRP (₹)</label>
-              <input type="number" [(ngModel)]="newCourse.display_price" name="display_price" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Duration (weeks)</label>
-            <input type="number" [(ngModel)]="newCourse.duration" name="duration" />
-          </div>
-          <div class="form-group">
-            <label>Course Description</label>
-            <textarea [(ngModel)]="newCourse.description" name="description" rows="3"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Why this course?</label>
-            <textarea [(ngModel)]="newCourse.why" name="why" rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Curriculum (One module per line)</label>
-            <textarea [(ngModel)]="curriculumInput" name="curriculum" rows="5"></textarea>
-          </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="newCourse.title" placeholder="Course title" />
+    </div>
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>Category</label>
+        <select [(ngModel)]="newCourse.category">
+          <option value="trending">🔥 Trending</option>
+          <option value="popular">⭐ Popular</option>
+          <option value="new">🆕 New</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="editingCourse.status">
+          <option value="DRAFT">Draft</option>
+          <option value="PENDING_APPROVAL">Pending Approval</option>
+          <option value="PUBLISHED">Published</option>
+          <option value="REJECTED">Rejected</option>
+          <option value="ARCHIVED">Archived</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Technology Tag</label>
+      <input type="text" [(ngModel)]="newCourse.tag" placeholder="e.g., Java, Python, DevOps" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea [(ngModel)]="newCourse.description" rows="3" placeholder="Short course summary"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Why this course?</label>
+      <textarea [(ngModel)]="newCourse.why" rows="2" placeholder="What students will gain"></textarea>
+    </div>
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>Faculty Requested Price</label>
+        <div
+          style="padding: 12px; background: var(--surface); border-radius: 6px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-weight: bold; color: var(--text);">₹{{ newCourse.price | number }}</span>
+
         </div>
       </div>
-      <div class="modal-actions" style="display: flex; gap: 12px; margin-top: 16px; justify-content: flex-end;">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <button type="button" class="btn btn-outline" (click)="showEditCourseModal = false">Cancel</button>
+      <div class="form-group">
+        <label>Display Price</label>
+        <input type="number" [(ngModel)]="newCourse.display_price" placeholder="₹4999" />
       </div>
-    </form>
+    </div>
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>Duration (weeks)</label>
+        <input type="number" [(ngModel)]="newCourse.duration" placeholder="8" />
+      </div>
+      <div class="form-group">
+        <label>Certification</label>
+        <select [(ngModel)]="newCourse.certification">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Curriculum Steps</label>
+      <div *ngFor="let step of newCourse.curriculum; let i = index; trackBy: trackByIndex"
+        style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <input type="text" [(ngModel)]="newCourse.curriculum[i]" placeholder="Enter curriculum step" style="flex: 1;" />
+        <button class="btn btn-outline" (click)="removeCurriculumStep(i)" *ngIf="newCourse.curriculum.length > 1"
+          style="padding: 0 10px;">❌</button>
+      </div>
+      <button class="btn btn-outline" (click)="addCurriculumStep()"
+        style="margin-top: 8px; padding: 4px 12px; font-size: 14px;">+ Add Step</button>
+    </div>
+    <div style="display: flex; gap: 12px; margin-top: 24px">
+      <button class="btn btn-primary" (click)="updateCourse()">
+        Save Changes
+      </button>
+      <button class="btn btn-outline" (click)="showEditCourseModal = false">
+        Cancel
+      </button>
+    </div>
   </div>
 </div>
