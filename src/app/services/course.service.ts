@@ -21,6 +21,11 @@ export class CourseService {
   getCourse(id: string) {
     return this.http.get<any>(`${API}/courses/${id}`);
   }
+  getDeletedCourses() {
+    return this.http.get<any[]>(`${API}/courses/deleted`, {
+      headers: this.headers(),
+    });
+  }
   getCart() {
     return this.http.get<any[]>(`${API}/courses/cart/items`, {
       headers: this.headers(),
@@ -58,6 +63,13 @@ export class CourseService {
   submitCourse(id: string) {
     return this.http.post<any>(
       `${API}/courses/${id}/submit`,
+      {},
+      { headers: this.headers() },
+    );
+  }
+  requestArchive(id: string) {
+    return this.http.post<any>(
+      `${API}/courses/${id}/archive-request`,
       {},
       { headers: this.headers() },
     );

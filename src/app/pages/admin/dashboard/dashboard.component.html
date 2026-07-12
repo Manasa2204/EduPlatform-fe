@@ -86,7 +86,7 @@
         <div class="application-card card" *ngFor="let course of pendingCourses">
           <div class="app-header">
             <h3>{{ course.title }}</h3>
-            <span class="status-badge pending">{{ course.status }}</span>
+            <span class="status-badge pending" *ngIf="course.status === 'PENDING_APPROVAL'">Pending Approval</span>
           </div>
           <div class="app-details">
             <p><strong>Category:</strong> {{ course.category }}</p>
@@ -447,9 +447,9 @@
       style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--border);">
       <button class="btn btn-outline" (click)="showCourseDetailsModal = false">Close</button>
       <button class="btn btn-success" (click)="approveCourse(selectedCourse.id); showCourseDetailsModal = false"
-        *ngIf="selectedCourse.status === 'pending'">Approve</button>
+        *ngIf="selectedCourse.status === 'PENDING_APPROVAL'">Approve</button>
       <button class="btn btn-danger" (click)="rejectCourse(selectedCourse.id); showCourseDetailsModal = false"
-        *ngIf="selectedCourse.status === 'pending'">Reject</button>
+        *ngIf="selectedCourse.status === 'PENDING_APPROVAL'">Reject</button>
     </div>
   </div>
 </div>
@@ -484,10 +484,11 @@
             <div class="form-group">
               <label>Status</label>
               <select [(ngModel)]="editingCourse.status" name="status">
-                <option value="draft">Draft</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
+                <option value="DRAFT">Draft</option>
+                <option value="PENDING_APPROVAL">Pending Approval</option>
+                <option value="PUBLISHED">Published</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="ARCHIVED">Archived</option>
               </select>
             </div>
           </div>

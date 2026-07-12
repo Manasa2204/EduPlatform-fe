@@ -11,6 +11,7 @@ export class FacultyDashboardComponent implements OnInit {
   students: any[] = [];
   schedule: any[] = [];
   courses: any[] = [];
+  deletedCourses: any[] = [];
   activeTab = 'students';
   showSessionModal = false;
   showCourseModal = false;
@@ -60,6 +61,9 @@ export class FacultyDashboardComponent implements OnInit {
     this.facultyService.getCourses().subscribe((d) => {
       this.courses = d;
     });
+    this.courseService.getDeletedCourses().subscribe((d) => {
+      this.deletedCourses = d;
+    });
   }
 
   openSessionModal() {
@@ -106,7 +110,8 @@ export class FacultyDashboardComponent implements OnInit {
   }
 
   updateCourse() {
-    this.courseService.updateCourse(this.editingCourse.id, this.newCourse).subscribe(() => {
+    const payload = { ...this.newCourse, status: this.editingCourse.status };
+    this.courseService.updateCourse(this.editingCourse.id, payload).subscribe(() => {
       this.showEditCourseModal = false;
       this.message = 'Course updated successfully.';
       this.loadCourses();
@@ -126,6 +131,24 @@ export class FacultyDashboardComponent implements OnInit {
       this.message = 'Course submitted for review.';
       this.loadCourses();
     });
+  }
+
+  deleteCourse(course: any) {
+    if (confirm('Are you sure you want to delete this course?')) {
+      this.courseService.deleteCourse(course.id).subscribe(() => {
+        this.message = 'Course deleted successfully.';
+        this.loadCourses();
+      });
+    }
+  }
+
+  requestArchive(course: any) {
+    if (confirm('Are you sure you want to request archiving this course?')) {
+      this.courseService.requestArchive(course.id).subscribe(() => {
+        this.message = 'Archive request submitted successfully.';
+        this.loadCourses();
+      });
+    }
   }
 
   createSession() {
