@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 
-const API = 'http://localhost:3000/api';
+// const API = 'http://localhost:3000/api';
+const API = 'http://edu-platform-be.vercel.app/api';
 
 @Injectable({ providedIn: 'root' })
 export class FacultyService {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-  ) {}
+  ) { }
   private headers() {
     return new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
   }

@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, tap } from 'rxjs';
 
-const API = 'http://localhost:3000/api';
+// const API = 'http://localhost:3000/api';
+const API = 'http://edu-platform-be.vercel.app/api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private userSubject = new BehaviorSubject<any>(this.getStoredUser());
   user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string) {
     return this.http.post<any>(`${API}/auth/login`, { email, password }).pipe(
