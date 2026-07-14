@@ -56,6 +56,8 @@ export class AdminDashboardComponent implements OnInit {
     this.loadAll();
   }
 
+  users: any[] = [];
+
   loadAll() {
     this.adminService
       .getApplications()
@@ -65,6 +67,7 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService
       .getPendingCourses()
       .subscribe((d) => (this.pendingCourses = d));
+    this.adminService.getUsers().subscribe((d) => (this.users = d.filter((u: any) => u.role === 'student')));
   }
 
   // Group applications by person (email)
@@ -264,6 +267,31 @@ export class AdminDashboardComponent implements OnInit {
   }
 
 
+
+  // Student Enrollment
+  showEnrollModal = false;
+  selectedCourseForEnroll: any = null;
+  selectedStudentIdForEnroll = '';
+
+  openEnrollModal(course: any) {
+    this.selectedCourseForEnroll = course;
+    this.selectedStudentIdForEnroll = '';
+    this.showEnrollModal = true;
+  }
+
+  enrollStudent() {
+    if (!this.selectedStudentIdForEnroll) return;
+    this.adminService.enrollStudent(this.selectedCourseForEnroll.id, this.selectedStudentIdForEnroll).subscribe({
+      next: () => {
+        this.showSuccess('Student enrolled successfully!');
+        this.showEnrollModal = false;
+        this.loadAll();
+      },
+      error: (err) => {
+        this.showError(err.error?.message || 'Failed to enroll student.');
+      }
+    });
+  }
 
   resetForm() {
     this.newCourse = {

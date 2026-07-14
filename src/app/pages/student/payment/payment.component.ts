@@ -5,12 +5,12 @@ import { Router } from '@angular/router';
 @Component({ selector: 'app-payment', templateUrl: './payment.component.html', styleUrls: ['./payment.component.scss'] })
 export class PaymentComponent implements OnInit {
   cartItems: any[] = [];
-  get total() { return this.cartItems.reduce((s, c) => s + (c.display_price > 0 ? c.display_price : c.price), 0); }
+  get total() { return this.cartItems.reduce((s, c) => s + (Number(c.display_price) > 0 ? Number(c.display_price) : Number(c.price)), 0); }
   step: 'details' | 'processing' | 'success' = 'details';
   card = { number: '', name: '', expiry: '', cvv: '' };
   order: any = null;
 
-  constructor(private courseService: CourseService, private router: Router) {}
+  constructor(private courseService: CourseService, private router: Router) { }
 
   ngOnInit() { this.courseService.getCart().subscribe(data => { if (!data.length) this.router.navigate(['/cart']); this.cartItems = data; }); }
 

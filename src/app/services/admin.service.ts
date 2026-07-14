@@ -77,4 +77,9 @@ export class AdminService {
       headers: this.headers(),
     });
   }
+  enrollStudent(courseId: string, studentId: string) {
+    return this.http.post<any>(`${API}/admin/courses/${courseId}/enroll/${studentId}`, {}, {
+      headers: this.headers(),
+    });
+  }
 }

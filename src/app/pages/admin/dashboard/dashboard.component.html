@@ -192,8 +192,10 @@
               <td>{{ c.duration }} weeks</td>
               <td>{{ c.enrolled | number }}</td>
               <td>
-                <button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;"
+                <button class="btn btn-outline" style="padding: 4px 8px; font-size: 12px; margin-right: 8px;"
                   (click)="editCourse(c)">Edit</button>
+                <button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;"
+                  (click)="openEnrollModal(c)">Enroll</button>
               </td>
             </tr>
           </tbody>
@@ -565,6 +567,31 @@
         Save Changes
       </button>
       <button class="btn btn-outline" (click)="showEditCourseModal = false">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Enroll Student Modal -->
+<div class="modal-overlay" *ngIf="showEnrollModal">
+  <div class="modal course-modal" style="max-width: 500px;">
+    <h2>👤 Enroll Student</h2>
+    <p>Select a student to enroll in <strong>{{ selectedCourseForEnroll?.title }}</strong>.</p>
+    
+    <div class="form-group" style="margin-top: 20px;">
+      <label>Select Student</label>
+      <select class="form-control" [(ngModel)]="selectedStudentIdForEnroll" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface);">
+        <option value="" disabled selected>-- Select Student --</option>
+        <option *ngFor="let user of users" [value]="user.id">{{ user.name }} ({{ user.email }})</option>
+      </select>
+    </div>
+
+    <div class="modal-actions" style="margin-top: 30px;">
+      <button type="submit" class="btn btn-primary btn-lg" (click)="enrollStudent()" [disabled]="!selectedStudentIdForEnroll">
+        Enroll Student
+      </button>
+      <button type="button" class="btn btn-outline" (click)="showEnrollModal = false">
         Cancel
       </button>
     </div>
