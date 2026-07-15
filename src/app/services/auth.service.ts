@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, tap } from 'rxjs';
 
 // const API = 'http://localhost:3000/api';
-const API = 'http://edu-platform-be.vercel.app/api';
+const API = 'https://edu-platform-be.vercel.app/api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

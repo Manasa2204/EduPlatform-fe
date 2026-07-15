@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 
 // const API = 'http://localhost:3000/api';
-const API = 'http://edu-platform-be.vercel.app/api';
+const API = 'https://edu-platform-be.vercel.app/api';
 
 @Injectable({ providedIn: 'root' })
 export class FacultyService {
