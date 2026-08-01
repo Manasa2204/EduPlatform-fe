@@ -41,6 +41,19 @@ export class FacultyDashboardComponent implements OnInit {
     curriculum: [''],
   };
   message = '';
+  selectedCourseId = '';
+
+  get filteredStudents() {
+    if (!this.selectedCourseId) return this.students;
+    return this.students.filter(s => s.course_id === this.selectedCourseId);
+  }
+
+  openLiveClassModal() {
+    this.openSessionModal();
+    if (this.selectedCourseId) {
+      this.session.courseId = this.selectedCourseId;
+    }
+  }
 
   constructor(
     private facultyService: FacultyService,

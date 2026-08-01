@@ -38,6 +38,13 @@
     <!-- Students Tab -->
     <div *ngIf="activeTab === 'students'">
       <div class="card">
+        <div class="table-header" style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+          <select [(ngModel)]="selectedCourseId" class="input-field" style="max-width: 300px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">All Courses</option>
+            <option *ngFor="let course of courses" [value]="course.id">{{ course.title }}</option>
+          </select>
+          <button *ngIf="selectedCourseId" class="btn btn-primary" (click)="openLiveClassModal()">Schedule Live Class for Course</button>
+        </div>
         <table>
           <thead>
             <tr>
@@ -48,25 +55,28 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let s of students">
+            <tr *ngFor="let s of filteredStudents">
               <td>
-                <div class="student-name">
-                  <img [src]="s.avatar" class="student-avatar" />
+                <div class="student-name" style="display: flex; align-items: center; gap: 10px;">
+                  <div class="avatar-placeholder" style="width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #475569;">{{ s.name[0] }}</div>
                   {{ s.name }}
                 </div>
               </td>
               <td>{{ s.email }}</td>
               <td>
-                <span class="tag-chip">{{ s.course }}</span>
+                <span class="tag-chip">{{ s.course_title }}</span>
               </td>
               <td>
                 <div class="progress-wrap">
                   <div class="progress-bar">
-                    <div class="fill" [style.width.%]="s.progress"></div>
+                    <div class="fill" [style.width.%]="s.progress || 0"></div>
                   </div>
-                  <span class="pct">{{ s.progress }}%</span>
+                  <span class="pct">{{ s.progress || 0 }}%</span>
                 </div>
               </td>
+            </tr>
+            <tr *ngIf="filteredStudents.length === 0">
+              <td colspan="4" style="text-align: center; padding: 20px;">No students found for this course.</td>
             </tr>
           </tbody>
         </table>

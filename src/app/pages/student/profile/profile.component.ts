@@ -13,6 +13,8 @@ export class ProfileComponent implements OnInit {
   upcomingSessions: any[] = [];
   totalSpent = 0;
 
+  pendingCourses: any[] = [];
+
   constructor(
     private auth: AuthService,
     private courseService: CourseService,
@@ -26,8 +28,9 @@ export class ProfileComponent implements OnInit {
 
   loadEnrolledCourses() {
     this.courseService.getEnrolled().subscribe((courses) => {
-      this.enrolledCourses = courses;
-      this.totalSpent = courses.reduce((sum, c) => sum + (Number(c.display_price) > 0 ? Number(c.display_price) : Number(c.price)), 0);
+      this.enrolledCourses = courses.filter((c: any) => c.order_status !== 'pending' || c.progress !== undefined);
+      this.pendingCourses = courses.filter((c: any) => c.order_status === 'pending');
+      this.totalSpent = this.enrolledCourses.reduce((sum, c) => sum + (Number(c.display_price) > 0 ? Number(c.display_price) : Number(c.price)), 0);
       this.loadUpcomingSessions();
     });
   }

@@ -114,6 +114,32 @@
       </ng-template>
     </div>
 
+    <div class="section-block" *ngIf="pendingCourses.length">
+      <h2 class="section-title">Pending <span>Enrollments</span></h2>
+
+      <div class="enrolled-courses">
+        <div class="course-item card" *ngFor="let course of pendingCourses">
+          <div class="course-content">
+            <div class="course-header">
+              <span class="tag-chip">{{ course.tag }}</span>
+              <span class="badge badge-warning">Awaiting Approval</span>
+            </div>
+            <h3 class="course-title">{{ course.title }}</h3>
+            <p class="course-desc">{{ course.description }}</p>
+
+            <div class="course-meta">
+              <span class="meta-info">⭐ {{ course.rating }}</span>
+              <span class="meta-info">⏱ {{ course.duration }}</span>
+            </div>
+            
+            <div class="progress-section" style="margin-top: 15px;">
+              <p style="color: #f59e0b; margin: 0; font-size: 0.9rem;">Your order is currently pending and awaiting confirmation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="section-block" *ngIf="upcomingSessions.length">
       <h2 class="section-title">Upcoming <span>Live Sessions</span></h2>
       <div class="sessions-grid">
