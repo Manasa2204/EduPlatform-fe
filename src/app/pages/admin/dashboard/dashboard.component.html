@@ -583,7 +583,7 @@
       <label>Select Student</label>
       <select class="form-control" [(ngModel)]="selectedStudentIdForEnroll" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface);">
         <option value="" disabled selected>-- Select Student --</option>
-        <option *ngFor="let user of users" [value]="user.id">{{ user.name }} ({{ user.email }})</option>
+        <option *ngFor="let user of availableUsersForEnrollment" [value]="user.id">{{ user.name }} ({{ user.email }})</option>
       </select>
     </div>
 

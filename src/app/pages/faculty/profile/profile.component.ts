@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FacultyService } from '../../../services/faculty.service';
 
 @Component({
   selector: 'app-faculty-profile',
@@ -10,8 +10,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class FacultyProfileComponent implements OnInit {
   profileForm: FormGroup;
   successMessage = '';
+  errorMessage = '';
+  email = '';
+  isLoading = true;
+  isSaving = false;
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private facultyService: FacultyService, private fb: FormBuilder) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       expertise: ['', Validators.required],
@@ -23,17 +27,36 @@ export class FacultyProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get<any>('/api/faculty/profile').subscribe(data => {
-      this.profileForm.patchValue(data);
+    this.facultyService.getProfile().subscribe({
+      next: (data) => {
+        this.profileForm.patchValue(data);
+        this.email = data.email || '';
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Failed to load profile details.';
+        this.isLoading = false;
+      }
     });
   }
 
   onSubmit() {
     if (this.profileForm.valid) {
-      this.http.put('/api/faculty/profile', this.profileForm.value).subscribe(() => {
-        this.successMessage = 'Profile updated successfully!';
-        setTimeout(() => this.successMessage = '', 3000);
+      this.isSaving = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+      this.facultyService.updateProfile(this.profileForm.value).subscribe({
+        next: () => {
+          this.successMessage = 'Profile updated successfully!';
+          this.isSaving = false;
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: () => {
+          this.errorMessage = 'Failed to update profile. Please try again.';
+          this.isSaving = false;
+        }
       });
     }
   }
 }
+

@@ -47,9 +47,19 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  getCompletionPercentage() {
+  getAvgProgress() {
     if (!this.enrolledCourses.length) return 0;
-    // Simulate random progress
-    return Math.floor(Math.random() * 60) + 20; // 20-80%
+    const total = this.enrolledCourses.reduce((sum, c) => sum + (c.progress || 0), 0);
+    return Math.floor(total / this.enrolledCourses.length);
+  }
+
+  updateProgress(course: any) {
+    const modules = course.curriculum?.length || 1;
+    const increment = Math.ceil(100 / modules);
+    let newProgress = (course.progress || 0) + increment;
+    if (newProgress > 100) newProgress = 100;
+    this.courseService.updateProgress(course.id, newProgress).subscribe(() => {
+      course.progress = newProgress;
+    });
   }
 }

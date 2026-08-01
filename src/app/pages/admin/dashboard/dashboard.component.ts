@@ -67,7 +67,7 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService
       .getPendingCourses()
       .subscribe((d) => (this.pendingCourses = d));
-    this.adminService.getUsers().subscribe((d) => (this.users = d.filter((u: any) => u.role === 'student')));
+    this.adminService.getUsers().subscribe((d) => (this.users = d.filter((u: any) => u.role === 'student' && u.has_order)));
   }
 
   // Group applications by person (email)
@@ -277,6 +277,16 @@ export class AdminDashboardComponent implements OnInit {
     this.selectedCourseForEnroll = course;
     this.selectedStudentIdForEnroll = '';
     this.showEnrollModal = true;
+  }
+
+  get availableUsersForEnrollment() {
+    if (!this.selectedCourseForEnroll) return this.users;
+    return this.users.filter(u => {
+      const ordered = u.ordered_courses || [];
+      const enrolled = u.enrolled_courses || [];
+      const courseId = this.selectedCourseForEnroll.id;
+      return ordered.includes(courseId) && !enrolled.includes(courseId);
+    });
   }
 
   enrollStudent() {

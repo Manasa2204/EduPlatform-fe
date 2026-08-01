@@ -19,7 +19,6 @@
             <span class="meta-item">📅 Joined {{ getJoinDate() }}</span>
           </div>
         </div>
-        <button class="btn btn-outline edit-btn">Edit Profile</button>
       </div>
 
       <!-- Stats Cards -->
@@ -43,7 +42,7 @@
         <div class="stat-card card">
           <span class="stat-icon">⚡</span>
           <div class="stat-content">
-            <div class="stat-number">{{ getCompletionPercentage() }}%</div>
+            <div class="stat-number">{{ getAvgProgress() }}%</div>
             <div class="stat-label">Avg. Progress</div>
           </div>
         </div>
@@ -82,21 +81,21 @@
               <div class="progress-header">
                 <span class="progress-label">Progress</span>
                 <span class="progress-percent"
-                  >{{ getCompletionPercentage() }}%</span
+                  >{{ course.progress || 0 }}%</span
                 >
               </div>
               <div class="progress-bar">
                 <div
                   class="fill"
-                  [style.width.%]="getCompletionPercentage()"
+                  [style.width.%]="course.progress || 0"
                 ></div>
               </div>
             </div>
           </div>
 
           <div class="course-actions">
-            <button class="btn btn-primary">Continue Learning</button>
-            <button class="btn btn-outline">View Certificate</button>
+            <button class="btn btn-primary" (click)="updateProgress(course)" [disabled]="course.progress >= 100">Continue Learning</button>
+            <button class="btn btn-outline" *ngIf="course.certification && course.progress >= 100">View Certificate</button>
           </div>
         </div>
       </div>
