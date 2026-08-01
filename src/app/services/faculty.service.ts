@@ -44,4 +44,14 @@ export class FacultyService {
       headers: this.headers(),
     });
   }
+  getProfile() {
+    return this.http.get<any>(`${API}/faculty/profile`, {
+      headers: this.headers(),
+    });
+  }
+  updateProfile(data: any) {
+    return this.http.put<any>(`${API}/faculty/profile`, data, {
+      headers: this.headers(),
+    });
+  }
 }

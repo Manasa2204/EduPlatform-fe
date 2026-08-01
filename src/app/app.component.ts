@@ -6,9 +6,10 @@ import { AuthService } from './services/auth.service';
   template: `
     <app-navbar></app-navbar>
     <router-outlet></router-outlet>
+    <app-footer></app-footer>
   `,
   styles: [`app-navbar { display: block; }`]
 })
 export class AppComponent {
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService) { }
 }

@@ -97,4 +97,11 @@ export class CourseService {
       headers: this.headers(),
     });
   }
+  updateProgress(courseId: string, progress: number) {
+    return this.http.post<any>(
+      `${API}/courses/${courseId}/progress`,
+      { progress },
+      { headers: this.headers() }
+    );
+  }
 }

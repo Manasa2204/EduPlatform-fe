@@ -32,4 +32,16 @@ export class AuthService {
   isLoggedIn() { return !!this.getToken(); }
   getRole() { return this.getUser()?.role; }
   private getStoredUser() { const u = localStorage.getItem('user'); return u ? JSON.parse(u) : null; }
+
+  getGoogleAuthUrl() {
+    return this.http.get<{url: string}>(`${API}/auth/google/url`);
+  }
+
+  getGoogleStatus(userId: string) {
+    return this.http.get<{connected: boolean}>(`${API}/auth/google/status/${userId}`);
+  }
+
+  connectGoogleCallback(code: string, userId: string) {
+    return this.http.post<{message: string}>(`${API}/auth/google/callback`, { code, userId });
+  }
 }
