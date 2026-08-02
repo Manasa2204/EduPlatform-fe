@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { CourseService } from '../../../services/course.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -50,6 +51,7 @@ export class AdminDashboardComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private courseService: CourseService,
+    private toast: ToastService
   ) { }
 
   ngOnInit() {
@@ -59,15 +61,26 @@ export class AdminDashboardComponent implements OnInit {
   users: any[] = [];
 
   loadAll() {
-    this.adminService
-      .getApplications()
-      .subscribe((d) => (this.applications = d));
-    this.adminService.getFaculty().subscribe((d) => (this.faculty = d));
-    this.adminService.getCourses().subscribe((d) => (this.courses = d));
-    this.adminService
-      .getPendingCourses()
-      .subscribe((d) => (this.pendingCourses = d));
-    this.adminService.getUsers().subscribe((d) => (this.users = d.filter((u: any) => u.role === 'student' && u.has_order)));
+    this.adminService.getApplications().subscribe({
+      next: (d) => (this.applications = d),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load applications')
+    });
+    this.adminService.getFaculty().subscribe({
+      next: (d) => (this.faculty = d),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load faculty')
+    });
+    this.adminService.getCourses().subscribe({
+      next: (d) => (this.courses = d),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load courses')
+    });
+    this.adminService.getPendingCourses().subscribe({
+      next: (d) => (this.pendingCourses = d),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load pending courses')
+    });
+    this.adminService.getUsers().subscribe({
+      next: (d) => (this.users = d.filter((u: any) => u.role === 'student' && u.has_order)),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load users')
+    });
   }
 
   // Group applications by person (email)
@@ -127,16 +140,22 @@ export class AdminDashboardComponent implements OnInit {
 
   // Pending courses approval
   approveCourse(id: string) {
-    this.adminService.approveCourse(id).subscribe(() => {
-      this.showSuccess('Course approved successfully!');
-      this.loadAll();
+    this.adminService.approveCourse(id).subscribe({
+      next: () => {
+        this.toast.showSuccess('Course approved successfully!');
+        this.loadAll();
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to approve course')
     });
   }
 
   rejectCourse(id: string) {
-    this.adminService.rejectCourse(id).subscribe(() => {
-      this.showSuccess('Course rejected successfully!');
-      this.loadAll();
+    this.adminService.rejectCourse(id).subscribe({
+      next: () => {
+        this.toast.showSuccess('Course rejected successfully!');
+        this.loadAll();
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to reject course')
     });
   }
 
@@ -188,11 +207,14 @@ export class AdminDashboardComponent implements OnInit {
       faculty_id: this.selectedFacultyId,
     };
 
-    this.courseService.createCourse(courseData).subscribe(() => {
-      this.showCourseModal = false;
-      this.resetForm();
-      this.loadAll();
-      this.showSuccess('Course created successfully!');
+    this.courseService.createCourse(courseData).subscribe({
+      next: () => {
+        this.showCourseModal = false;
+        this.resetForm();
+        this.loadAll();
+        this.toast.showSuccess('Course created successfully!');
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to create course')
     });
   }
 
@@ -224,10 +246,13 @@ export class AdminDashboardComponent implements OnInit {
 
     this.courseService
       .updateCourse(this.editingCourse.id, courseData)
-      .subscribe(() => {
-        this.showEditCourseModal = false;
-        this.loadAll();
-        this.showSuccess('Course updated successfully!');
+      .subscribe({
+        next: () => {
+          this.showEditCourseModal = false;
+          this.loadAll();
+          this.toast.showSuccess('Course updated successfully!');
+        },
+        error: (err) => this.toast.showError(err.error?.message || 'Failed to update course')
       });
   }
 
@@ -245,9 +270,12 @@ export class AdminDashboardComponent implements OnInit {
 
   deleteCourse(id: string, title: string) {
     if (confirm(`Are you sure you want to delete "${title}"?`)) {
-      this.courseService.deleteCourse(id).subscribe(() => {
-        this.loadAll();
-        this.showSuccess('Course deleted successfully!');
+      this.courseService.deleteCourse(id).subscribe({
+        next: () => {
+          this.loadAll();
+          this.toast.showSuccess('Course deleted successfully!');
+        },
+        error: (err) => this.toast.showError(err.error?.message || 'Failed to delete course')
       });
     }
   }
@@ -259,9 +287,12 @@ export class AdminDashboardComponent implements OnInit {
         `Are you sure you want to remove "${name}" from faculty? This will not delete their talent applications.`,
       )
     ) {
-      this.adminService.deleteFaculty(id).subscribe(() => {
-        this.loadAll();
-        this.showSuccess('Faculty member removed successfully!');
+      this.adminService.deleteFaculty(id).subscribe({
+        next: () => {
+          this.loadAll();
+          this.toast.showSuccess('Faculty member removed successfully!');
+        },
+        error: (err) => this.toast.showError(err.error?.message || 'Failed to remove faculty')
       });
     }
   }
@@ -346,14 +377,10 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   showSuccess(message: string) {
-    this.successMsg = message;
-    this.errorMsg = '';
-    setTimeout(() => (this.successMsg = ''), 4000);
+    this.toast.showSuccess(message);
   }
 
   showError(message: string) {
-    this.errorMsg = message;
-    this.successMsg = '';
-    setTimeout(() => (this.errorMsg = ''), 4000);
+    this.toast.showError(message);
   }
 }

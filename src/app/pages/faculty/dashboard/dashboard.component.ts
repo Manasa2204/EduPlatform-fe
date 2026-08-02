@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FacultyService } from '../../../services/faculty.service';
 import { CourseService } from '../../../services/course.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-faculty-dashboard',
@@ -58,24 +59,37 @@ export class FacultyDashboardComponent implements OnInit {
   constructor(
     private facultyService: FacultyService,
     private courseService: CourseService,
+    private toast: ToastService
   ) { }
 
   ngOnInit() {
-    this.facultyService.getStudents().subscribe((d) => (this.students = d));
+    this.facultyService.getStudents().subscribe({
+      next: (d) => (this.students = d),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load students')
+    });
     this.loadSessions();
     this.loadCourses();
   }
 
   loadSessions() {
-    this.facultyService.getSessions().subscribe((d) => (this.schedule = d));
+    this.facultyService.getSessions().subscribe({
+      next: (d) => (this.schedule = d),
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load sessions')
+    });
   }
 
   loadCourses() {
-    this.facultyService.getCourses().subscribe((d) => {
-      this.courses = d;
+    this.facultyService.getCourses().subscribe({
+      next: (d) => {
+        this.courses = d;
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load courses')
     });
-    this.courseService.getDeletedCourses().subscribe((d) => {
-      this.deletedCourses = d;
+    this.courseService.getDeletedCourses().subscribe({
+      next: (d) => {
+        this.deletedCourses = d;
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load deleted courses')
     });
   }
 
@@ -124,51 +138,75 @@ export class FacultyDashboardComponent implements OnInit {
 
   updateCourse() {
     const payload = { ...this.newCourse, status: this.editingCourse.status };
-    this.courseService.updateCourse(this.editingCourse.id, payload).subscribe(() => {
-      this.showEditCourseModal = false;
-      this.message = 'Course updated successfully.';
-      this.loadCourses();
+    this.courseService.updateCourse(this.editingCourse.id, payload).subscribe({
+      next: () => {
+        this.showEditCourseModal = false;
+        this.message = 'Course updated successfully.';
+        this.toast.showSuccess(this.message);
+        this.loadCourses();
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to update course')
     });
   }
 
   createCourse() {
-    this.courseService.createCourse(this.newCourse).subscribe(() => {
-      this.showCourseModal = false;
-      this.message = 'Course draft created successfully.';
-      this.loadCourses();
+    this.courseService.createCourse(this.newCourse).subscribe({
+      next: () => {
+        this.showCourseModal = false;
+        this.message = 'Course draft created successfully.';
+        this.toast.showSuccess(this.message);
+        this.loadCourses();
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to create course')
     });
   }
 
   submitCourse(course: any) {
-    this.courseService.submitCourse(course.id).subscribe(() => {
-      this.message = 'Course submitted for review.';
-      this.loadCourses();
+    this.courseService.submitCourse(course.id).subscribe({
+      next: () => {
+        this.message = 'Course submitted for review.';
+        this.toast.showSuccess(this.message);
+        this.loadCourses();
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to submit course')
     });
   }
 
   deleteCourse(course: any) {
     if (confirm('Are you sure you want to delete this course?')) {
-      this.courseService.deleteCourse(course.id).subscribe(() => {
-        this.message = 'Course deleted successfully.';
-        this.loadCourses();
+      this.courseService.deleteCourse(course.id).subscribe({
+        next: () => {
+          this.message = 'Course deleted successfully.';
+          this.toast.showSuccess(this.message);
+          this.loadCourses();
+        },
+        error: (err) => this.toast.showError(err.error?.message || 'Failed to delete course')
       });
     }
   }
 
   requestArchive(course: any) {
     if (confirm('Are you sure you want to request archiving this course?')) {
-      this.courseService.requestArchive(course.id).subscribe(() => {
-        this.message = 'Archive request submitted successfully.';
-        this.loadCourses();
+      this.courseService.requestArchive(course.id).subscribe({
+        next: () => {
+          this.message = 'Archive request submitted successfully.';
+          this.toast.showSuccess(this.message);
+          this.loadCourses();
+        },
+        error: (err) => this.toast.showError(err.error?.message || 'Failed to submit archive request')
       });
     }
   }
 
   createSession() {
-    this.facultyService.createSession(this.session).subscribe((res) => {
-      this.showSessionModal = false;
-      this.loadSessions();
-      this.zoomResult = res.join_url;
+    this.facultyService.createSession(this.session).subscribe({
+      next: (res) => {
+        this.showSessionModal = false;
+        this.loadSessions();
+        this.zoomResult = res.join_url;
+        this.toast.showSuccess('Session created successfully');
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to create session')
     });
   }
 
@@ -179,11 +217,15 @@ export class FacultyDashboardComponent implements OnInit {
   }
 
   createZoom() {
-    this.facultyService.createZoom(this.zoom).subscribe((res) => {
-      this.zoomResult = res.zoomLink;
-      const sch = this.schedule.find((s) => s.id === this.zoom.scheduleId);
-      if (sch) sch.zoomLink = res.zoomLink;
-      this.showZoomModal = false;
+    this.facultyService.createZoom(this.zoom).subscribe({
+      next: (res) => {
+        this.zoomResult = res.zoomLink;
+        const sch = this.schedule.find((s) => s.id === this.zoom.scheduleId);
+        if (sch) sch.zoomLink = res.zoomLink;
+        this.showZoomModal = false;
+        this.toast.showSuccess('Zoom meeting created successfully');
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to create Zoom meeting')
     });
   }
 

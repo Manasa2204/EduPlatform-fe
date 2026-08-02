@@ -4,6 +4,7 @@ import { FacultyService } from '../../../services/faculty.service';
 
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-faculty-profile',
@@ -24,7 +25,8 @@ export class FacultyProfileComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
@@ -44,8 +46,9 @@ export class FacultyProfileComponent implements OnInit {
         this.isLoading = false;
         this.checkGoogleStatus();
       },
-      error: () => {
-        this.errorMessage = 'Failed to load profile details.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to load profile details.';
+        this.toast.showError(this.errorMessage);
         this.isLoading = false;
       }
     });
@@ -59,11 +62,13 @@ export class FacultyProfileComponent implements OnInit {
           this.authService.connectGoogleCallback(code, user.id).subscribe({
             next: () => {
               this.successMessage = 'Google Calendar connected successfully!';
+              this.toast.showSuccess(this.successMessage);
               this.isGoogleConnected = true;
               this.router.navigate([], { queryParams: { code: null }, queryParamsHandling: 'merge' });
             },
-            error: () => {
-              this.errorMessage = 'Failed to connect Google Calendar.';
+            error: (err) => {
+              this.errorMessage = err.error?.message || 'Failed to connect Google Calendar.';
+              this.toast.showError(this.errorMessage);
             }
           });
         }
@@ -87,8 +92,9 @@ export class FacultyProfileComponent implements OnInit {
       next: (res) => {
         window.location.href = res.url;
       },
-      error: () => {
-        this.errorMessage = 'Failed to initiate Google connection.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to initiate Google connection.';
+        this.toast.showError(this.errorMessage);
       }
     });
   }
@@ -101,11 +107,13 @@ export class FacultyProfileComponent implements OnInit {
       this.facultyService.updateProfile(this.profileForm.value).subscribe({
         next: () => {
           this.successMessage = 'Profile updated successfully!';
+          this.toast.showSuccess(this.successMessage);
           this.isSaving = false;
           setTimeout(() => this.successMessage = '', 3000);
         },
-        error: () => {
-          this.errorMessage = 'Failed to update profile. Please try again.';
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to update profile. Please try again.';
+          this.toast.showError(this.errorMessage);
           this.isSaving = false;
         }
       });

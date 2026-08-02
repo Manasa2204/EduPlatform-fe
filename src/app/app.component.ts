@@ -7,6 +7,7 @@ import { AuthService } from './services/auth.service';
     <app-navbar></app-navbar>
     <router-outlet></router-outlet>
     <app-footer></app-footer>
+    <app-toast></app-toast>
   `,
   styles: [`app-navbar { display: block; }`]
 })

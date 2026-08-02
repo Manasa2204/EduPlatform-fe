@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent {
   constructor(
     private auth: AuthService,
     private router: Router,
+    private toast: ToastService
   ) {
     if (this.auth.isLoggedIn()) this.redirectByRole(this.auth.getRole());
   }
@@ -24,9 +26,13 @@ export class LoginComponent {
     this.error = '';
     this.loading = true;
     this.auth.login(this.email, this.password).subscribe({
-      next: (res) => this.redirectByRole(res.user.role),
+      next: (res) => {
+        this.toast.showSuccess('Login successful');
+        this.redirectByRole(res.user.role);
+      },
       error: (err) => {
         this.error = err.error?.message || 'Login failed';
+        this.toast.showError(this.error);
         this.loading = false;
       },
     });

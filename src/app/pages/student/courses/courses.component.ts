@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CourseService } from '../../../services/course.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({ selector: 'app-courses', templateUrl: './courses.component.html', styleUrls: ['./courses.component.scss'] })
 export class CoursesComponent implements OnInit {
@@ -9,12 +10,15 @@ export class CoursesComponent implements OnInit {
   activeCategory = 'all';
   search = '';
 
-  constructor(private courseService: CourseService) {}
+  constructor(private courseService: CourseService, private toast: ToastService) {}
 
   ngOnInit() {
-    this.courseService.getCourses().subscribe(data => {
-      this.courses = data;
-      this.applyFilter();
+    this.courseService.getCourses().subscribe({
+      next: data => {
+        this.courses = data;
+        this.applyFilter();
+      },
+      error: err => this.toast.showError(err.error?.message || 'Failed to load courses')
     });
   }
 

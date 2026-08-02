@@ -22,12 +22,13 @@ import { ProfileComponent } from './pages/student/profile/profile.component';
 import { FacultyProfileComponent } from './pages/faculty/profile/profile.component';
 import { InstructorProfileComponent } from './pages/student/instructor-profile/instructor-profile.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 @NgModule({
   declarations: [
     AppComponent, NavbarComponent, LoginComponent, SignupComponent, HomeComponent,
     CoursesComponent, CourseDetailComponent, CartComponent, PaymentComponent,
-    FacultyDashboardComponent, HireTalentLandingComponent, HireTalentApplyComponent, AdminDashboardComponent, ZoomCountPipe, PendingCountPipe, ProfileComponent, FacultyProfileComponent, InstructorProfileComponent, FooterComponent
+    FacultyDashboardComponent, HireTalentLandingComponent, HireTalentApplyComponent, AdminDashboardComponent, ZoomCountPipe, PendingCountPipe, ProfileComponent, FacultyProfileComponent, InstructorProfileComponent, FooterComponent, ToastComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule],
   bootstrap: [AppComponent]

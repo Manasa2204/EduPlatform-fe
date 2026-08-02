@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { CourseService } from '../../../services/course.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +19,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private courseService: CourseService,
+    private toast: ToastService
   ) {
     this.user = this.auth.getUser();
   }
@@ -27,17 +29,23 @@ export class ProfileComponent implements OnInit {
   }
 
   loadEnrolledCourses() {
-    this.courseService.getEnrolled().subscribe((courses) => {
-      this.enrolledCourses = courses.filter((c: any) => c.order_status !== 'pending' || c.progress !== undefined);
-      this.pendingCourses = courses.filter((c: any) => c.order_status === 'pending');
-      this.totalSpent = this.enrolledCourses.reduce((sum, c) => sum + (Number(c.display_price) > 0 ? Number(c.display_price) : Number(c.price)), 0);
-      this.loadUpcomingSessions();
+    this.courseService.getEnrolled().subscribe({
+      next: (courses) => {
+        this.enrolledCourses = courses.filter((c: any) => c.order_status !== 'pending');
+        this.pendingCourses = courses.filter((c: any) => c.order_status === 'pending');
+        this.totalSpent = this.enrolledCourses.reduce((sum, c) => sum + (Number(c.display_price) > 0 ? Number(c.display_price) : Number(c.price)), 0);
+        this.loadUpcomingSessions();
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load courses')
     });
   }
 
   loadUpcomingSessions() {
-    this.courseService.getEnrolledSessions().subscribe((sessions) => {
-      this.upcomingSessions = sessions;
+    this.courseService.getEnrolledSessions().subscribe({
+      next: (sessions) => {
+        this.upcomingSessions = sessions;
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to load sessions')
     });
   }
 
@@ -61,8 +69,12 @@ export class ProfileComponent implements OnInit {
     const increment = Math.ceil(100 / modules);
     let newProgress = (course.progress || 0) + increment;
     if (newProgress > 100) newProgress = 100;
-    this.courseService.updateProgress(course.id, newProgress).subscribe(() => {
-      course.progress = newProgress;
+    this.courseService.updateProgress(course.id, newProgress).subscribe({
+      next: () => {
+        course.progress = newProgress;
+        this.toast.showSuccess('Progress updated');
+      },
+      error: (err) => this.toast.showError(err.error?.message || 'Failed to update progress')
     });
   }
 }

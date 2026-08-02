@@ -1,0 +1,14 @@
+<div class="toast-container" *ngIf="toastMessage">
+  <div class="toast" [ngClass]="toastMessage.type">
+    <div class="toast-content">
+      <span class="icon">
+        <i *ngIf="toastMessage.type === 'success'" class="ph ph-check-circle"></i>
+        <i *ngIf="toastMessage.type === 'error'" class="ph ph-x-circle"></i>
+      </span>
+      <p>{{ toastMessage.message }}</p>
+    </div>
+    <button class="close-btn" (click)="close()">
+      <i class="ph ph-x"></i>
+    </button>
+  </div>
+</div>
