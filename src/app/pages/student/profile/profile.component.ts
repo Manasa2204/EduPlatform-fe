@@ -69,12 +69,23 @@ export class ProfileComponent implements OnInit {
     const increment = Math.ceil(100 / modules);
     let newProgress = (course.progress || 0) + increment;
     if (newProgress > 100) newProgress = 100;
-    this.courseService.updateProgress(course.id, newProgress).subscribe({
-      next: () => {
-        course.progress = newProgress;
-        this.toast.showSuccess('Progress updated');
-      },
-      error: (err) => this.toast.showError(err.error?.message || 'Failed to update progress')
-    });
+    
+    // Only call the API if there is an actual increase
+    if (newProgress > (course.progress || 0)) {
+      this.courseService.updateProgress(course.id, newProgress).subscribe({
+        next: () => {
+          course.progress = newProgress;
+          this.toast.showSuccess('Progress updated');
+        },
+        error: (err) => this.toast.showError(err.error?.message || 'Failed to update progress')
+      });
+    }
+  }
+
+  joinSession(session: any) {
+    const course = this.enrolledCourses.find(c => c.id === session.course_id);
+    if (course) {
+      this.updateProgress(course);
+    }
   }
 }
