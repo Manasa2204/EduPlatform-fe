@@ -104,4 +104,11 @@ export class CourseService {
       { headers: this.headers() }
     );
   }
+  joinSession(courseId: string, sessionId: string) {
+    return this.http.post<any>(
+      `${API}/courses/${courseId}/join-session`,
+      { session_id: sessionId },
+      { headers: this.headers() }
+    );
+  }
 }
