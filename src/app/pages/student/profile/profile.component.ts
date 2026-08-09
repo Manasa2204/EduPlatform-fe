@@ -13,6 +13,7 @@ export class ProfileComponent implements OnInit {
   user: any = null;
   enrolledCourses: any[] = [];
   upcomingSessions: any[] = [];
+  previousSessions: any[] = [];
   totalSpent = 0;
 
   pendingCourses: any[] = [];
@@ -44,7 +45,26 @@ export class ProfileComponent implements OnInit {
   loadUpcomingSessions() {
     this.courseService.getEnrolledSessions().subscribe({
       next: (sessions) => {
-        this.upcomingSessions = sessions;
+        const now = moment();
+        this.upcomingSessions = [];
+        this.previousSessions = [];
+        
+        sessions.forEach((session: any) => {
+          let isPast = false;
+          if (session.date && session.time) {
+            const dateStr = typeof session.date === 'string' ? session.date.split('T')[0] : session.date;
+            const sessionDateTime = moment(`${dateStr} ${session.time}`, 'YYYY-MM-DD HH:mm');
+            if (sessionDateTime.isBefore(now)) {
+              isPast = true;
+            }
+          }
+          
+          if (isPast) {
+            this.previousSessions.push(session);
+          } else {
+            this.upcomingSessions.push(session);
+          }
+        });
       },
       error: (err) => this.toast.showError(err.error?.message || 'Failed to load sessions')
     });

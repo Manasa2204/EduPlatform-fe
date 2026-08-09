@@ -138,6 +138,46 @@
           zoomResult
           }}</a>
       </div>
+
+      <div class="schedule-toolbar" *ngIf="previousSchedule.length" style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 40px;
+          margin-bottom: 20px;
+        ">
+        <h2>Previous Sessions</h2>
+      </div>
+
+      <div class="schedule-grid" *ngIf="previousSchedule.length">
+        <div class="schedule-card past-session" *ngFor="let sch of previousSchedule">
+          <div class="sch-banner" style="opacity: 0.7;">
+            <div class="sch-date-info">
+              <span class="sch-date">📅 {{ formatDate(sch.date) }}</span>
+              <span class="sch-time">⏰ {{ formatTimeIST(sch.time) }}</span>
+            </div>
+          </div>
+          <div class="sch-body" style="opacity: 0.8;">
+            <h3>{{ sch.title }}</h3>
+            <p class="sch-desc" *ngIf="sch.description">{{ sch.description }}</p>
+          </div>
+          <div class="sch-meta-grid" style="opacity: 0.8;">
+            <div class="meta-item">
+              <span class="meta-icon">📚</span>
+              <span class="meta-value" [title]="sch.course_title">{{ sch.course_title }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon">⏱️</span>
+              <span class="meta-value">{{ sch.duration }} mins</span>
+            </div>
+          </div>
+          <div class="zoom-section">
+            <div class="no-zoom">
+              <span>✅ Session Completed</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="activeTab === 'courses'">
@@ -343,11 +383,11 @@
       <div class="form-row-2">
         <div class="form-group">
           <label>Date</label>
-          <input type="date" [(ngModel)]="session.date" required />
+          <input type="date" [(ngModel)]="session.date" [min]="minDate" required />
         </div>
         <div class="form-group">
           <label>Time</label>
-          <input type="time" [(ngModel)]="session.time" required />
+          <input type="time" [(ngModel)]="session.time" [min]="session.date === minDate ? minTime : null" required />
         </div>
       </div>
       <div class="form-group">

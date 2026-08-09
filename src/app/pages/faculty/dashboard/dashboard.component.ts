@@ -12,6 +12,7 @@ import moment from 'moment';
 export class FacultyDashboardComponent implements OnInit {
   students: any[] = [];
   schedule: any[] = [];
+  previousSchedule: any[] = [];
   courses: any[] = [];
   deletedCourses: any[] = [];
   activeTab = 'students';
@@ -75,7 +76,28 @@ export class FacultyDashboardComponent implements OnInit {
 
   loadSessions() {
     this.facultyService.getSessions().subscribe({
-      next: (d) => (this.schedule = d),
+      next: (d) => {
+        const now = moment();
+        this.schedule = [];
+        this.previousSchedule = [];
+        
+        d.forEach((session: any) => {
+          let isPast = false;
+          if (session.date && session.time) {
+            const dateStr = typeof session.date === 'string' ? session.date.split('T')[0] : session.date;
+            const sessionDateTime = moment(`${dateStr} ${session.time}`, 'YYYY-MM-DD HH:mm');
+            if (sessionDateTime.isBefore(now)) {
+              isPast = true;
+            }
+          }
+          
+          if (isPast) {
+            this.previousSchedule.push(session);
+          } else {
+            this.schedule.push(session);
+          }
+        });
+      },
       error: (err) => this.toast.showError(err.error?.message || 'Failed to load sessions')
     });
   }
@@ -202,7 +224,21 @@ export class FacultyDashboardComponent implements OnInit {
     }
   }
 
+  get minDate(): string {
+    return moment().format('YYYY-MM-DD');
+  }
+
+  get minTime(): string {
+    return moment().format('HH:mm');
+  }
+
   createSession() {
+    const sessionDateTime = moment(`${this.session.date} ${this.session.time}`, 'YYYY-MM-DD HH:mm');
+    if (sessionDateTime.isBefore(moment())) {
+      this.toast.showError('Cannot schedule a session in the past');
+      return;
+    }
+
     this.facultyService.createSession(this.session).subscribe({
       next: (res) => {
         this.showSessionModal = false;
