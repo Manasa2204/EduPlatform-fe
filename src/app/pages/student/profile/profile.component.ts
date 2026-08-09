@@ -65,28 +65,18 @@ export class ProfileComponent implements OnInit {
     return Math.floor(total / this.enrolledCourses.length);
   }
 
-  updateProgress(course: any) {
-    const modules = course.curriculum?.length || 1;
-    const increment = Math.ceil(100 / modules);
-    let newProgress = (course.progress || 0) + increment;
-    if (newProgress > 100) newProgress = 100;
-    
-    // Only call the API if there is an actual increase
-    if (newProgress > (course.progress || 0)) {
-      this.courseService.updateProgress(course.id, newProgress).subscribe({
-        next: () => {
-          course.progress = newProgress;
-          this.toast.showSuccess('Progress updated');
-        },
-        error: (err) => this.toast.showError(err.error?.message || 'Failed to update progress')
-      });
-    }
-  }
-
   joinSession(session: any) {
     const course = this.enrolledCourses.find(c => c.id === session.course_id);
     if (course) {
-      this.updateProgress(course);
+      this.courseService.joinSession(course.id, session.id).subscribe({
+        next: (res) => {
+          if (res.progress > course.progress) {
+            course.progress = res.progress;
+            this.toast.showSuccess(`Progress updated: ${res.progress}%`);
+          }
+        },
+        error: (err) => console.error('Failed to track session join:', err)
+      });
     }
   }
 

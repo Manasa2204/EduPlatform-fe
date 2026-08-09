@@ -297,6 +297,10 @@
         </div>
       </div>
       <div class="form-group">
+        <label>Total Sessions</label>
+        <input type="number" [(ngModel)]="newCourse.total_sessions" placeholder="10" />
+      </div>
+      <div class="form-group">
         <label>Curriculum Steps</label>
         <div *ngFor="let step of newCourse.curriculum; let i = index; trackBy: trackByIndex" style="display: flex; gap: 8px; margin-bottom: 8px;">
           <input type="text" [(ngModel)]="newCourse.curriculum[i]" placeholder="Enter curriculum step" style="flex: 1;" />
@@ -431,6 +435,10 @@
           <label>Duration (weeks)</label>
           <input type="number" [(ngModel)]="newCourse.duration" placeholder="8" />
         </div>
+      </div>
+      <div class="form-group">
+        <label>Total Sessions</label>
+        <input type="number" [(ngModel)]="newCourse.total_sessions" placeholder="10" />
       </div>
       <div class="form-group">
         <label>Curriculum Steps</label>

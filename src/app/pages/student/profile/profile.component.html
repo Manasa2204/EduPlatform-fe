@@ -67,7 +67,7 @@
 
             <div class="course-meta">
               <span class="meta-info">⭐ {{ course.rating }}</span>
-              <span class="meta-info">⏱ {{ course.duration }}</span>
+              <span class="meta-info">⏱ {{ course.duration }} weeks</span>
               <span class="meta-info" *ngIf="course.certification">🏆 Certificate</span>
             </div>
 
@@ -84,8 +84,6 @@
           </div>
 
           <div class="course-actions">
-            <button class="btn btn-primary" (click)="updateProgress(course)"
-              [disabled]="course.progress >= 100">Continue Learning</button>
             <button class="btn btn-outline" *ngIf="course.certification && course.progress >= 100">View
               Certificate</button>
           </div>
@@ -116,7 +114,7 @@
 
             <div class="course-meta">
               <span class="meta-info">⭐ {{ course.rating }}</span>
-              <span class="meta-info">⏱ {{ course.duration }}</span>
+              <span class="meta-info">⏱ {{ course.duration }} weeks</span>
             </div>
 
             <div class="progress-section" style="margin-top: 15px;">

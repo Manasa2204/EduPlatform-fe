@@ -39,6 +39,7 @@ export class FacultyDashboardComponent implements OnInit {
     why: '',
     price: 0,
     duration: 8,
+    total_sessions: 10,
     certification: true,
     curriculum: [''],
   };
@@ -115,6 +116,7 @@ export class FacultyDashboardComponent implements OnInit {
       why: '',
       price: 0,
       duration: 8,
+      total_sessions: 10,
       certification: true,
       curriculum: [''],
     };
@@ -131,6 +133,7 @@ export class FacultyDashboardComponent implements OnInit {
       why: course.why,
       price: course.price,
       duration: course.duration || 8,
+      total_sessions: course.total_sessions || 10,
       certification: course.certification,
       curriculum: course.curriculum && course.curriculum.length > 0 ? [...course.curriculum] : [''],
     };

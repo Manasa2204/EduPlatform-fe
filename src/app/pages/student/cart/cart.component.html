@@ -16,7 +16,7 @@
             <span class="tag-chip">{{ item.tag }}</span>
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
-            <span class="duration">⏱ {{ item.duration }}</span>
+            <span class="duration">⏱ {{ item.duration }} weeks</span>
           </div>
           <div class="item-actions">
             <span class="price">₹{{ (item.display_price > 0 ? item.display_price : item.price) | number }}</span>
@@ -36,8 +36,9 @@
           <span>Total</span>
           <span class="total-price">₹{{ total | number }}</span>
         </div>
-        
-        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px" (click)="checkout()">
+
+        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:20px"
+          (click)="checkout()">
           Place Order →
         </button>
       </div>
