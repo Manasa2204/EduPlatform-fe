@@ -98,22 +98,35 @@
       </div>
 
       <div class="schedule-grid">
-        <div class="schedule-card card" *ngFor="let sch of schedule">
-          <div class="sch-header">
-            <h3>{{ sch.title }}</h3>
-            <span class="sch-date">📅 {{ sch.date }} at {{ sch.time }}</span>
+        <div class="schedule-card" *ngFor="let sch of schedule">
+          <div class="sch-banner">
+            <div class="sch-date-info">
+              <span class="sch-date">📅 {{ formatDate(sch.date) }}</span>
+              <span class="sch-time">⏰ {{ formatTimeIST(sch.time) }}</span>
+            </div>
           </div>
-          <div class="sch-details">
-            <p>{{ sch.description }}</p>
-            <p><strong>Course:</strong> {{ sch.course_title }}</p>
-            <p><strong>Duration:</strong> {{ sch.duration }} mins</p>
+          <div class="sch-body">
+            <h3>{{ sch.title }}</h3>
+            <p class="sch-desc" *ngIf="sch.description">{{ sch.description }}</p>
+          </div>
+          <div class="sch-meta-grid">
+            <div class="meta-item">
+              <span class="meta-icon">📚</span>
+              <span class="meta-value" [title]="sch.course_title">{{ sch.course_title }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon">⏱️</span>
+              <span class="meta-value">{{ sch.duration }} mins</span>
+            </div>
           </div>
           <div class="zoom-section">
             <div *ngIf="sch.join_url; else noZoom">
-              <a [href]="sch.join_url" target="_blank" class="zoom-link">🎥 Join Session</a>
+              <a [href]="sch.join_url" target="_blank" class="zoom-btn">🎥 Join Session</a>
             </div>
             <ng-template #noZoom>
-              <span class="text-muted">Zoom meeting not created yet</span>
+              <div class="no-zoom">
+                <span>🚫 No Zoom link</span>
+              </div>
             </ng-template>
           </div>
         </div>

@@ -21,7 +21,7 @@ export class FacultyProfileComponent implements OnInit {
   isGoogleConnected = false;
 
   constructor(
-    private facultyService: FacultyService, 
+    private facultyService: FacultyService,
     private fb: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
@@ -53,25 +53,16 @@ export class FacultyProfileComponent implements OnInit {
       }
     });
 
-    // Check for Google OAuth callback
+    // Check for Google OAuth success redirect
     this.route.queryParams.subscribe(params => {
-      const code = params['code'];
-      if (code) {
-        const user = this.authService.getUser();
-        if (user && user.id) {
-          this.authService.connectGoogleCallback(code, user.id).subscribe({
-            next: () => {
-              this.successMessage = 'Google Calendar connected successfully!';
-              this.toast.showSuccess(this.successMessage);
-              this.isGoogleConnected = true;
-              this.router.navigate([], { queryParams: { code: null }, queryParamsHandling: 'merge' });
-            },
-            error: (err) => {
-              this.errorMessage = err.error?.message || 'Failed to connect Google Calendar.';
-              this.toast.showError(this.errorMessage);
-            }
-          });
-        }
+      const googleConnected = params['googleConnected'];
+      if (googleConnected === 'true') {
+        this.successMessage = 'Google Calendar connected successfully!';
+        this.isGoogleConnected = true;
+        this.router.navigate([], { queryParams: { googleConnected: null }, queryParamsHandling: 'merge' });
+      } else if (googleConnected === 'false') {
+        this.errorMessage = 'Failed to connect Google Calendar.';
+        this.router.navigate([], { queryParams: { googleConnected: null }, queryParamsHandling: 'merge' });
       }
     });
   }
@@ -88,15 +79,19 @@ export class FacultyProfileComponent implements OnInit {
   }
 
   connectGoogle() {
-    this.authService.getGoogleAuthUrl().subscribe({
-      next: (res) => {
-        window.location.href = res.url;
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to initiate Google connection.';
-        this.toast.showError(this.errorMessage);
-      }
-    });
+    const user = this.authService.getUser();
+    if (user && user.id) {
+      this.authService.getGoogleAuthUrl(user.id).subscribe({
+        next: (res) => {
+          window.location.href = res.url;
+        },
+        error: () => {
+          this.errorMessage = 'Failed to initiate Google connection.';
+        }
+      });
+    } else {
+      this.errorMessage = 'User not found, cannot connect Google Calendar.';
+    }
   }
 
   onSubmit() {

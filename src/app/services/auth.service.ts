@@ -33,8 +33,8 @@ export class AuthService {
   getRole() { return this.getUser()?.role; }
   private getStoredUser() { const u = localStorage.getItem('user'); return u ? JSON.parse(u) : null; }
 
-  getGoogleAuthUrl() {
-    return this.http.get<{url: string}>(`${API}/auth/google/url`);
+  getGoogleAuthUrl(userId: string) {
+    return this.http.get<{url: string}>(`${API}/auth/google/url?userId=${userId}`);
   }
 
   getGoogleStatus(userId: string) {

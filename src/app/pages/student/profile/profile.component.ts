@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { CourseService } from '../../../services/course.service';
 import { ToastService } from '../../../services/toast.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-profile',
@@ -87,5 +88,15 @@ export class ProfileComponent implements OnInit {
     if (course) {
       this.updateProgress(course);
     }
+  }
+
+  formatTimeIST(timeStr: string): string {
+    if (!timeStr) return '';
+    return moment(timeStr, 'HH:mm').format('h:mm a');
+  }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '';
+    return moment(dateStr).format('DD-MM-YYYY');
   }
 }

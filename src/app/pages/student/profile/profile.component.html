@@ -53,17 +53,14 @@
     <div class="section-block">
       <h2 class="section-title">My <span>Enrolled Courses</span></h2>
 
-      <div
-        class="enrolled-courses"
-        *ngIf="enrolledCourses.length; else noCourses"
-      >
+      <div class="enrolled-courses" *ngIf="enrolledCourses.length; else noCourses">
         <div class="course-item card" *ngFor="let course of enrolledCourses">
           <div class="course-content">
             <div class="course-header">
               <span class="tag-chip">{{ course.tag }}</span>
               <span class="badge badge-{{ course.category }}">{{
                 course.category
-              }}</span>
+                }}</span>
             </div>
             <h3 class="course-title">{{ course.title }}</h3>
             <p class="course-desc">{{ course.description }}</p>
@@ -71,31 +68,26 @@
             <div class="course-meta">
               <span class="meta-info">⭐ {{ course.rating }}</span>
               <span class="meta-info">⏱ {{ course.duration }}</span>
-              <span class="meta-info" *ngIf="course.certification"
-                >🏆 Certificate</span
-              >
+              <span class="meta-info" *ngIf="course.certification">🏆 Certificate</span>
             </div>
 
             <!-- Progress Bar -->
             <div class="progress-section">
               <div class="progress-header">
                 <span class="progress-label">Progress</span>
-                <span class="progress-percent"
-                  >{{ course.progress || 0 }}%</span
-                >
+                <span class="progress-percent">{{ course.progress || 0 }}%</span>
               </div>
               <div class="progress-bar">
-                <div
-                  class="fill"
-                  [style.width.%]="course.progress || 0"
-                ></div>
+                <div class="fill" [style.width.%]="course.progress || 0"></div>
               </div>
             </div>
           </div>
 
           <div class="course-actions">
-            <button class="btn btn-primary" (click)="updateProgress(course)" [disabled]="course.progress >= 100">Continue Learning</button>
-            <button class="btn btn-outline" *ngIf="course.certification && course.progress >= 100">View Certificate</button>
+            <button class="btn btn-primary" (click)="updateProgress(course)"
+              [disabled]="course.progress >= 100">Continue Learning</button>
+            <button class="btn btn-outline" *ngIf="course.certification && course.progress >= 100">View
+              Certificate</button>
           </div>
         </div>
       </div>
@@ -104,12 +96,7 @@
         <div class="empty-state">
           <h3>📚 No courses yet</h3>
           <p>Start your learning journey by enrolling in a course</p>
-          <a
-            routerLink="/courses"
-            class="btn btn-primary"
-            style="margin-top: 16px"
-            >Browse Courses</a
-          >
+          <a routerLink="/courses" class="btn btn-primary" style="margin-top: 16px">Browse Courses</a>
         </div>
       </ng-template>
     </div>
@@ -131,9 +118,10 @@
               <span class="meta-info">⭐ {{ course.rating }}</span>
               <span class="meta-info">⏱ {{ course.duration }}</span>
             </div>
-            
+
             <div class="progress-section" style="margin-top: 15px;">
-              <p style="color: #f59e0b; margin: 0; font-size: 0.9rem;">Your order is currently pending and awaiting confirmation.</p>
+              <p style="color: #f59e0b; margin: 0; font-size: 0.9rem;">Your order is currently pending and awaiting
+                confirmation.</p>
             </div>
           </div>
         </div>
@@ -143,24 +131,37 @@
     <div class="section-block" *ngIf="upcomingSessions.length">
       <h2 class="section-title">Upcoming <span>Live Sessions</span></h2>
       <div class="sessions-grid">
-        <div class="session-card card" *ngFor="let session of upcomingSessions">
-          <div class="session-info">
-            <h3>{{ session.title }}</h3>
-            <p class="session-meta">
-              {{ session.course_title }} • {{ session.date }}
-              {{ session.time }} • {{ session.duration }} mins
-            </p>
-            <p>{{ session.description }}</p>
+        <div class="session-card" *ngFor="let session of upcomingSessions">
+          <div class="sess-banner">
+            <div class="sess-date-info">
+              <span class="sess-date">📅 {{ formatDate(session.date) }}</span>
+              <span class="sess-time">⏰ {{ formatTimeIST(session.time) }}</span>
+            </div>
           </div>
-          <div class="session-actions">
-            <a
-              class="btn btn-primary"
-              [href]="session.join_url"
-              target="_blank"
-              (click)="joinSession(session)"
-            >
-              Join via Zoom
-            </a>
+          <div class="sess-body">
+            <h3>{{ session.title }}</h3>
+            <p class="sess-desc" *ngIf="session.description">{{ session.description }}</p>
+          </div>
+          <div class="sess-meta-grid">
+            <div class="meta-item">
+              <span class="meta-icon">📚</span>
+              <span class="meta-value" [title]="session.course_title">{{ session.course_title }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon">⏱️</span>
+              <span class="meta-value">{{ session.duration }} mins</span>
+            </div>
+          </div>
+          <div class="zoom-section">
+            <div *ngIf="session.join_url; else noZoom">
+              <a [href]="session.join_url" target="_blank" (click)="joinSession(session)" class="zoom-btn">🎥 Join
+                Session</a>
+            </div>
+            <ng-template #noZoom>
+              <div class="no-zoom">
+                <span>🚫 No Zoom link</span>
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>

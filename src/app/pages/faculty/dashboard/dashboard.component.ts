@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FacultyService } from '../../../services/faculty.service';
 import { CourseService } from '../../../services/course.service';
 import { ToastService } from '../../../services/toast.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-faculty-dashboard',
@@ -235,6 +236,16 @@ export class FacultyDashboardComponent implements OnInit {
 
   removeCurriculumStep(index: number) {
     this.newCourse.curriculum.splice(index, 1);
+  }
+
+  formatTimeIST(timeStr: string): string {
+    if (!timeStr) return '';
+    return moment(timeStr, 'HH:mm').format('h:mm a');
+  }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '';
+    return moment(dateStr).format('DD-MM-YYYY');
   }
 
   trackByIndex(index: number, obj: any): any {
